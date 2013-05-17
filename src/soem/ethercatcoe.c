@@ -49,11 +49,11 @@
 #include <string.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include "ethercattype.h"
-#include "nicdrv.h"
-#include "ethercatbase.h"
-#include "ethercatmain.h"
-#include "ethercatcoe.h"
+#include "soem/ethercattype.h"
+#include "soem/nicdrv.h"
+#include "soem/ethercatbase.h"
+#include "soem/ethercatmain.h"
+#include "soem/ethercatcoe.h"
 
 /** SDO structure, not to be confused with EcSDOserviceT */
 typedef struct PACKED
@@ -138,7 +138,8 @@ void ec_SDOerror(uint16 Slave, uint16 Index, uint8 SubIdx, int32 AbortCode)
     Ec.AbortCode = AbortCode;
     ec_pusherror(&Ec);
 }
-
+
+
 /** Report SDO info error
  *
  * @param[in]  Slave		= Slave number
