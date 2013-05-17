@@ -1,4 +1,4 @@
-#include "YouBotGripperTest.hpp"
+#include "testing/YouBotGripperTest.hpp"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdexcept>

@@ -1,4 +1,4 @@
-#include "YouBotArmTestWithoutThread.hpp"
+#include "testing/YouBotArmTestWithoutThread.hpp"
 #include <stdlib.h>
 #include <stdexcept>
 

@@ -51,11 +51,11 @@
 #include <string.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include "ethercattype.h"
-#include "nicdrv.h"
-#include "ethercatbase.h"
-#include "ethercatmain.h"
-#include "ethercatfoe.h"
+#include "soem/ethercattype.h"
+#include "soem/nicdrv.h"
+#include "soem/ethercatbase.h"
+#include "soem/ethercatmain.h"
+#include "soem/ethercatfoe.h"
 
 #define EC_MAXFOEDATA 512
 

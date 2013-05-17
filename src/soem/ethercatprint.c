@@ -48,8 +48,8 @@
  */
 
 #include <stdio.h>
-#include "ethercattype.h"
-#include "ethercatmain.h"
+#include "soem/ethercattype.h"
+#include "soem/ethercatmain.h"
 
 #define EC_MAXERRORNAME 127
 
