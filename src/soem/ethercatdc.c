@@ -43,11 +43,11 @@
  * Distributed Clock EtherCAT functions. 
  *
  */
-#include "ethercattype.h"
-#include "nicdrv.h"
-#include "ethercatbase.h"
-#include "ethercatmain.h"
-#include "ethercatdc.h"
+#include "soem/ethercattype.h"
+#include "soem/nicdrv.h"
+#include "soem/ethercatbase.h"
+#include "soem/ethercatmain.h"
+#include "soem/ethercatdc.h"
 
 #define PORTM0 0x01
 #define PORTM1 0x02
