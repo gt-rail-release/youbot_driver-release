@@ -55,8 +55,8 @@
 #include "youbot/YouBotSlaveMailboxMsg.hpp"
 #include "youbot/JointLimitMonitor.hpp"
 extern "C"{
-#include <ethercattype.h>
-#include <ethercatmain.h>
+#include <soem/ethercattype.h>
+#include <soem/ethercatmain.h>
 }
 
 namespace youbot {
