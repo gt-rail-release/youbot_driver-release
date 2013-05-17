@@ -51,9 +51,9 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "ethercattype.h"
-#include "nicdrv.h"
-#include "ethercatbase.h"
+#include "soem/ethercattype.h"
+#include "soem/nicdrv.h"
+#include "soem/ethercatbase.h"
 
 /** Generate and set EtherCAT datagram in a standard ethernet frame.
  *

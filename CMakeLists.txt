@@ -27,17 +27,9 @@ catkin_package(
 
 ## Specify additional locations of header files
 include_directories(
+  include
   ${catkin_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
-  include
-  include/soem
-  include/generic
-  include/base-kinematic
-  include/generic-joint
-  include/testing
-  include/one-dof-gripper
-  include/youbot
-  include/generic-gripper
 )
 
 link_directories(

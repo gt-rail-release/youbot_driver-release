@@ -79,8 +79,8 @@
 #include <pthread.h>
 #include <stdlib.h>
 
-#include "ethercattype.h"
-#include "nicdrv.h"
+#include "soem/ethercattype.h"
+#include "soem/nicdrv.h"
 
 /** Redundancy modes */
 enum

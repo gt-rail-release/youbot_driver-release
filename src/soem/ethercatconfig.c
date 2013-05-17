@@ -50,13 +50,13 @@
 #include <string.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include "ethercattype.h"
-#include "nicdrv.h"
-#include "ethercatbase.h"
-#include "ethercatmain.h"
-#include "ethercatcoe.h"
-#include "ethercatsoe.h"
-#include "ethercatconfig.h"
+#include "soem/ethercattype.h"
+#include "soem/nicdrv.h"
+#include "soem/ethercatbase.h"
+#include "soem/ethercatmain.h"
+#include "soem/ethercatcoe.h"
+#include "soem/ethercatsoe.h"
+#include "soem/ethercatconfig.h"
 
 // define if debug printf is needed
 //#define EC_DEBUG
@@ -96,7 +96,7 @@ typedef const struct
 	uint8				FM1ac;
 } ec_configlist_t;
 
-#include "ethercatconfiglist.h"
+#include "soem/ethercatconfiglist.h"
 
 /** standard SM0 flags configuration for mailbox slaves */
 #define EC_DEFAULTMBXSM0	0x00010026
