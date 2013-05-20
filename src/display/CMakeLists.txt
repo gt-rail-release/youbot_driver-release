@@ -19,7 +19,3 @@ install(TARGETS displayIpAddress
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-## Set permissions
-add_custom_command(TARGET displayIpAddress POST_BUILD
-    COMMAND sudo setcap cap_net_raw+ep $<TARGET_FILE:displayIpAddress>
-)
