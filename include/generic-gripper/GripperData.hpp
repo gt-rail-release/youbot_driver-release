@@ -52,12 +52,14 @@
  *
  ****************************************************************/
 #include "generic/Units.hpp"
-namespace youbot {
+namespace youbot
+{
 
 ///////////////////////////////////////////////////////////////////////////////
 /// abstract class of gripper data
 ///////////////////////////////////////////////////////////////////////////////
-class GripperData {
+class GripperData
+{
 };
 
 } // namespace youbot

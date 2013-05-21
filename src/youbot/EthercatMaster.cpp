@@ -50,37 +50,52 @@
  ****************************************************************/
 #include "youbot/EthercatMaster.hpp"
 
-namespace youbot {
+namespace youbot
+{
 
 EthercatMasterInterface* EthercatMaster::instance = 0;
 ///creates a instance of the singleton EthercatMaster if there is none and returns a reference to it
 ///@param configFile configuration file name incl. the extension
 ///@param configFilePath the path where the configuration is located with a / at the end
 ///@param ethercatMasterWithThread set it to false if you want to deactivate the communication thread
-EthercatMasterInterface& EthercatMaster::getInstance(const std::string configFile, const std::string configFilePath, const bool ethercatMasterWithThread)
+EthercatMasterInterface& EthercatMaster::getInstance(const std::string configFile, const std::string configFilePath,
+                                                     const bool ethercatMasterWithThread)
 {
   // Bouml preserved body begin 000E61F1
-    if (instance == 0) {
-      if(ethercatMasterWithThread){
-        instance = new EthercatMasterWithThread(configFile, configFilePath);
-      }else{
-        instance = new EthercatMasterWithoutThread(configFile, configFilePath);
-      }
+  if (instance == 0)
+  {
+    if (ethercatMasterWithThread)
+    {
+      instance = new EthercatMasterWithThread(configFile, configFilePath);
     }
-    return *instance;
+    else
+    {
+      instance = new EthercatMasterWithoutThread(configFile, configFilePath);
+    }
+  }
+  return *instance;
   // Bouml preserved body end 000E61F1
+}
+
+EthercatMasterInterface& EthercatMaster::getInstance()
+{
+  char* configLocation = getenv("YOUBOT_CONFIG_FOLDER_LOCATION");
+  if (configLocation == NULL)
+    throw std::runtime_error(
+        "EthercatMaster.cpp::getInstance(): Could not find environment variable YOUBOT_CONFIG_FOLDER_LOCATION");
+  return EthercatMaster::getInstance("youbot-ethercat.cfg", configLocation);
 }
 
 /// destroy the singleton instance by calling the destructor
 void EthercatMaster::destroy()
 {
   // Bouml preserved body begin 000E6271
-		if(instance != 0){
-			delete instance;
-			instance = 0;
-		}
+  if (instance != 0)
+  {
+    delete instance;
+    instance = 0;
+  }
   // Bouml preserved body end 000E6271
 }
-
 
 } // namespace youbot

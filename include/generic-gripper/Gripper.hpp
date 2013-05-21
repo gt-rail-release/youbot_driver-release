@@ -53,20 +53,22 @@
  ****************************************************************/
 #include "generic-gripper/GripperData.hpp"
 #include "generic-gripper/GripperParameter.hpp"
-namespace youbot {
+namespace youbot
+{
 
 ///////////////////////////////////////////////////////////////////////////////
 /// abstract gripper
 ///////////////////////////////////////////////////////////////////////////////
-class Gripper {
-  public:
-    virtual void setConfigurationParameter(const GripperParameter& parameter) = 0;
+class Gripper
+{
+public:
+  virtual void setConfigurationParameter(const GripperParameter& parameter) = 0;
 
-    virtual void getConfigurationParameter(GripperParameter& parameter) const = 0;
+  virtual void getConfigurationParameter(GripperParameter& parameter) const = 0;
 
-    virtual void setData(const GripperData& data) = 0;
+  virtual void setData(const GripperData& data) = 0;
 
-    virtual void getData(const GripperData& data) const = 0;
+  virtual void getData(const GripperData& data) const = 0;
 
 };
 

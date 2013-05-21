@@ -54,7 +54,8 @@
 #include "generic/Units.hpp"
 #include "generic/Time.hpp"
 #include "generic-joint/JointData.hpp"
-namespace youbot {
+namespace youbot
+{
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Joint Trajectory Segment
@@ -69,11 +70,12 @@ struct TrajectorySegment
 ///////////////////////////////////////////////////////////////////////////////
 /// Joint Trajectory representation
 ///////////////////////////////////////////////////////////////////////////////
-class JointTrajectory {
-  public:
-    std::vector< TrajectorySegment > segments;
+class JointTrajectory
+{
+public:
+  std::vector<TrajectorySegment> segments;
 
-    boost::posix_time::ptime start_time;
+  boost::posix_time::ptime start_time;
 
 };
 
