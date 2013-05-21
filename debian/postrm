@@ -1,4 +1,0 @@
-#!/bin/sh
-
-sudo rm /etc/ld.so.conf.d/groovy.conf
-sudo ldconfig

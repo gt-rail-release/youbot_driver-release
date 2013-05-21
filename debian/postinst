@@ -1,6 +1,0 @@
-#!/bin/sh
-
-sudo setcap cap_net_raw+ep /opt/ros/groovy/lib/youbot_driver/base_arm_gripper_test
-sudo setcap cap_net_raw+ep /opt/ros/groovy/lib/youbot_driver/displayIpAddress
-sudo cp /opt/ros/groovy/share/youbot_driver/ld/*.conf /etc/ld.so.conf.d
-sudo ldconfig
