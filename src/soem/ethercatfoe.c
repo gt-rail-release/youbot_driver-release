@@ -62,254 +62,253 @@
 /** FOE structure.
  * Used for Read, Write, Data, Ack and Error mailbox packets.
  */
-typedef struct PACKED
-{
-    ec_mbxheadert   MbxHeader;
-	uint8			OpCode;
-	uint8			Reserved;
-	union
-	{	
-		uint32			Password;
-		uint32			PacketNumber;
-		uint32			ErrorCode;
-	};
-	union
-	{	
-		char			FileName[EC_MAXFOEDATA];
-		uint8			Data[EC_MAXFOEDATA];
-		char			ErrorText[EC_MAXFOEDATA];
-	};	
-} ec_FOEt;
+typedef struct
+  PACKED
+  {
+    ec_mbxheadert MbxHeader;
+    uint8 OpCode;
+    uint8 Reserved;
+    union
+    {
+      uint32 Password;
+      uint32 PacketNumber;
+      uint32 ErrorCode;
+    };
+    union
+    {
+      char FileName[EC_MAXFOEDATA];
+      uint8 Data[EC_MAXFOEDATA];
+      char ErrorText[EC_MAXFOEDATA];
+    };
+  } ec_FOEt;
 
-/** FoE read, blocking.
- * 
- * @param[in]  slave		= Slave number.
- * @param[in]  filename		= Filename of file to read.
- * @param[in]  password     = password.
- * @param[in,out] psize		= Size in bytes of file buffer, returns bytes read from file.
- * @param[out] p			= Pointer to file buffer
- * @param[in]  timeout		= Timeout in us, standard is EC_TIMEOUTRXM
- * @return Workcounter from last slave response
- */
-int ec_FOEread(uint16 slave, char *filename, uint32 password, int *psize, void *p, int timeout)
-{
+  /** FoE read, blocking.
+   *
+   * @param[in]  slave		= Slave number.
+   * @param[in]  filename		= Filename of file to read.
+   * @param[in]  password     = password.
+   * @param[in,out] psize		= Size in bytes of file buffer, returns bytes read from file.
+   * @param[out] p			= Pointer to file buffer
+   * @param[in]  timeout		= Timeout in us, standard is EC_TIMEOUTRXM
+   * @return Workcounter from last slave response
+   */
+  int ec_FOEread(uint16 slave, char *filename, uint32 password, int *psize, void *p, int timeout)
+  {
     ec_FOEt *FOEp, *aFOEp;
-	int wkc;
+    int wkc;
     int32 dataread = 0;
-	int32 buffersize, packetnumber, prevpacket = 0;
-	uint16 fnsize, maxdata, segmentdata;
+    int32 buffersize, packetnumber, prevpacket = 0;
+    uint16 fnsize, maxdata, segmentdata;
     ec_mbxbuft MbxIn, MbxOut;
     uint8 cnt;
     boolean worktodo;
 
-	buffersize = *psize;
+    buffersize = *psize;
     ec_clearmbx(&MbxIn);
-	/* Empty slave out mailbox if something is in. Timout set to 0 */
+    /* Empty slave out mailbox if something is in. Timout set to 0 */
     wkc = ec_mbxreceive(slave, (ec_mbxbuft *)&MbxIn, 0);
     ec_clearmbx(&MbxOut);
     aFOEp = (ec_FOEt *)&MbxIn;
     FOEp = (ec_FOEt *)&MbxOut;
-	fnsize = strlen(filename);
-	maxdata = ec_slave[slave].mbx_l - 12;
-	if (fnsize > maxdata)
-		fnsize = maxdata;
+    fnsize = strlen(filename);
+    maxdata = ec_slave[slave].mbx_l - 12;
+    if (fnsize > maxdata)
+      fnsize = maxdata;
     FOEp->MbxHeader.length = htoes(0x0006 + fnsize);
     FOEp->MbxHeader.address = htoes(0x0000);
     FOEp->MbxHeader.priority = 0x00;
-	/* get new mailbox count value, used as session handle */
+    /* get new mailbox count value, used as session handle */
     cnt = ec_nextmbxcnt(ec_slave[slave].mbx_cnt);
     ec_slave[slave].mbx_cnt = cnt;
     FOEp->MbxHeader.mbxtype = ECT_MBXT_FOE + (cnt << 4); /* FoE */
     FOEp->OpCode = ECT_FOE_READ;
     FOEp->Password = htoel(password);
-	/* copy filename in mailbox */
-	memcpy(&FOEp->FileName[0], filename, fnsize);
-	/* send FoE request to slave */
+    /* copy filename in mailbox */
+    memcpy(&FOEp->FileName[0], filename, fnsize);
+    /* send FoE request to slave */
     wkc = ec_mbxsend(slave, (ec_mbxbuft *)&MbxOut, EC_TIMEOUTTXM);
     if (wkc > 0) /* succeeded to place mailbox in slave ? */
     {
-		do
-		{	
-			worktodo = FALSE;
-			/* clean mailboxbuffer */
-			ec_clearmbx(&MbxIn);
-			/* read slave response */
-			wkc = ec_mbxreceive(slave, (ec_mbxbuft *)&MbxIn, timeout);
-			if (wkc > 0) /* succeeded to read slave response ? */
-			{
-				/* slave response should be FoE */
-				if ((aFOEp->MbxHeader.mbxtype & 0x0f) == ECT_MBXT_FOE)
-				{
-					if(aFOEp->OpCode == ECT_FOE_DATA)
-					{
-						segmentdata = etohs(aFOEp->MbxHeader.length) - 0x0006;
-						packetnumber = etohl(aFOEp->PacketNumber);
-						if ((packetnumber == ++prevpacket) && (dataread + segmentdata <= buffersize))
-						{
-							memcpy(p, &aFOEp->Data[0], segmentdata);
-							dataread += segmentdata;
-							p += segmentdata;
-							if (segmentdata == maxdata)
-								worktodo = TRUE; 
-							FOEp->MbxHeader.length = htoes(0x0006);
-							FOEp->MbxHeader.address = htoes(0x0000);
-							FOEp->MbxHeader.priority = 0x00;
-							/* get new mailbox count value */
-							cnt = ec_nextmbxcnt(ec_slave[slave].mbx_cnt);
-							ec_slave[slave].mbx_cnt = cnt;
-							FOEp->MbxHeader.mbxtype = ECT_MBXT_FOE + (cnt << 4); /* FoE */
-							FOEp->OpCode = ECT_FOE_ACK;
-							FOEp->PacketNumber = htoel(packetnumber);
-							/* send FoE ack to slave */
-							wkc = ec_mbxsend(slave, (ec_mbxbuft *)&MbxOut, EC_TIMEOUTTXM);
-							if (wkc <= 0)
-								worktodo = FALSE;
-						}
-						else
-						{
-							/* FoE error */
-							wkc = -EC_ERR_TYPE_FOE_BUF2SMALL;
-						}
-					}
-					else
-					if(aFOEp->OpCode == ECT_FOE_ERROR)
-					{
-						/* FoE error */
-						wkc = -EC_ERR_TYPE_FOE_ERROR;
-					}
-					else
-					{
-						/* unexpected mailbox received */
-						wkc = -EC_ERR_TYPE_PACKET_ERROR;
-					}
-				}
-				else
-				{
-					/* unexpected mailbox received */
-					wkc = -EC_ERR_TYPE_PACKET_ERROR;
-				}
-				*psize = dataread;
-			}
-		} while (worktodo);	
-	}
-	
-	return wkc;
-}	
+      do
+      {
+        worktodo = FALSE;
+        /* clean mailboxbuffer */
+        ec_clearmbx(&MbxIn);
+        /* read slave response */
+        wkc = ec_mbxreceive(slave, (ec_mbxbuft *)&MbxIn, timeout);
+        if (wkc > 0) /* succeeded to read slave response ? */
+        {
+          /* slave response should be FoE */
+          if ((aFOEp->MbxHeader.mbxtype & 0x0f) == ECT_MBXT_FOE)
+          {
+            if (aFOEp->OpCode == ECT_FOE_DATA)
+            {
+              segmentdata = etohs(aFOEp->MbxHeader.length) - 0x0006;
+              packetnumber = etohl(aFOEp->PacketNumber);
+              if ((packetnumber == ++prevpacket) && (dataread + segmentdata <= buffersize))
+              {
+                memcpy(p, &aFOEp->Data[0], segmentdata);
+                dataread += segmentdata;
+                p += segmentdata;
+                if (segmentdata == maxdata)
+                  worktodo = TRUE;
+                FOEp->MbxHeader.length = htoes(0x0006);
+                FOEp->MbxHeader.address = htoes(0x0000);
+                FOEp->MbxHeader.priority = 0x00;
+                /* get new mailbox count value */
+                cnt = ec_nextmbxcnt(ec_slave[slave].mbx_cnt);
+                ec_slave[slave].mbx_cnt = cnt;
+                FOEp->MbxHeader.mbxtype = ECT_MBXT_FOE + (cnt << 4); /* FoE */
+                FOEp->OpCode = ECT_FOE_ACK;
+                FOEp->PacketNumber = htoel(packetnumber);
+                /* send FoE ack to slave */
+                wkc = ec_mbxsend(slave, (ec_mbxbuft *)&MbxOut, EC_TIMEOUTTXM);
+                if (wkc <= 0)
+                  worktodo = FALSE;
+              }
+              else
+              {
+                /* FoE error */
+                wkc = -EC_ERR_TYPE_FOE_BUF2SMALL;
+              }
+            }
+            else if (aFOEp->OpCode == ECT_FOE_ERROR)
+            {
+              /* FoE error */
+              wkc = -EC_ERR_TYPE_FOE_ERROR;
+            }
+            else
+            {
+              /* unexpected mailbox received */
+              wkc = -EC_ERR_TYPE_PACKET_ERROR;
+            }
+          }
+          else
+          {
+            /* unexpected mailbox received */
+            wkc = -EC_ERR_TYPE_PACKET_ERROR;
+          }
+          *psize = dataread;
+        }
+      } while (worktodo);
+    }
 
-/** FoE write, blocking.
- * 
- * @param[in]  slave		= Slave number.
- * @param[in]  filename		= Filename of file to write.
- * @param[in]  password     = password.
- * @param[in]  psize		= Size in bytes of file buffer.
- * @param[out] p			= Pointer to file buffer
- * @param[in]  timeout		= Timeout in us, standard is EC_TIMEOUTRXM
- * @return Workcounter from last slave response
- */
-int ec_FOEwrite(uint16 slave, char *filename, uint32 password, int psize, void *p, int timeout)
-{
+    return wkc;
+  }
+
+  /** FoE write, blocking.
+   *
+   * @param[in]  slave		= Slave number.
+   * @param[in]  filename		= Filename of file to write.
+   * @param[in]  password     = password.
+   * @param[in]  psize		= Size in bytes of file buffer.
+   * @param[out] p			= Pointer to file buffer
+   * @param[in]  timeout		= Timeout in us, standard is EC_TIMEOUTRXM
+   * @return Workcounter from last slave response
+   */
+  int ec_FOEwrite(uint16 slave, char *filename, uint32 password, int psize, void *p, int timeout)
+  {
     ec_FOEt *FOEp, *aFOEp;
-	int wkc;
-	int32 packetnumber, sendpacket = 0;
-	uint16 fnsize, maxdata;
-	int segmentdata;
+    int wkc;
+    int32 packetnumber, sendpacket = 0;
+    uint16 fnsize, maxdata;
+    int segmentdata;
     ec_mbxbuft MbxIn, MbxOut;
     uint8 cnt;
     boolean worktodo;
-	int tsize;
+    int tsize;
 
     ec_clearmbx(&MbxIn);
-	/* Empty slave out mailbox if something is in. Timout set to 0 */
+    /* Empty slave out mailbox if something is in. Timout set to 0 */
     wkc = ec_mbxreceive(slave, (ec_mbxbuft *)&MbxIn, 0);
     ec_clearmbx(&MbxOut);
     aFOEp = (ec_FOEt *)&MbxIn;
     FOEp = (ec_FOEt *)&MbxOut;
-	fnsize = strlen(filename);
-	maxdata = ec_slave[slave].mbx_l - 12;
-	if (fnsize > maxdata)
-		fnsize = maxdata;
+    fnsize = strlen(filename);
+    maxdata = ec_slave[slave].mbx_l - 12;
+    if (fnsize > maxdata)
+      fnsize = maxdata;
     FOEp->MbxHeader.length = htoes(0x0006 + fnsize);
     FOEp->MbxHeader.address = htoes(0x0000);
     FOEp->MbxHeader.priority = 0x00;
-	/* get new mailbox count value, used as session handle */
+    /* get new mailbox count value, used as session handle */
     cnt = ec_nextmbxcnt(ec_slave[slave].mbx_cnt);
     ec_slave[slave].mbx_cnt = cnt;
     FOEp->MbxHeader.mbxtype = ECT_MBXT_FOE + (cnt << 4); /* FoE */
     FOEp->OpCode = ECT_FOE_WRITE;
     FOEp->Password = htoel(password);
-	/* copy filename in mailbox */
-	memcpy(&FOEp->FileName[0], filename, fnsize);
-	/* send FoE request to slave */
+    /* copy filename in mailbox */
+    memcpy(&FOEp->FileName[0], filename, fnsize);
+    /* send FoE request to slave */
     wkc = ec_mbxsend(slave, (ec_mbxbuft *)&MbxOut, EC_TIMEOUTTXM);
     if (wkc > 0) /* succeeded to place mailbox in slave ? */
     {
-		do
-		{	
-			worktodo = FALSE;
-			/* clean mailboxbuffer */
-			ec_clearmbx(&MbxIn);
-			/* read slave response */
-			wkc = ec_mbxreceive(slave, (ec_mbxbuft *)&MbxIn, timeout);
-			if (wkc > 0) /* succeeded to read slave response ? */
-			{
-				/* slave response should be FoE */
-				if ((aFOEp->MbxHeader.mbxtype & 0x0f) == ECT_MBXT_FOE)
-				{
-					if(aFOEp->OpCode == ECT_FOE_ACK)
-					{
-						packetnumber = etohl(aFOEp->PacketNumber);
-						if (packetnumber == sendpacket)
-						{
-							tsize = psize;
-							if (tsize > maxdata)
-							{
-								worktodo = TRUE; 
-								tsize = maxdata;
-							}	
-							segmentdata = tsize;
-							psize -= segmentdata;
-							FOEp->MbxHeader.length = htoes(0x0006 + segmentdata);
-							FOEp->MbxHeader.address = htoes(0x0000);
-							FOEp->MbxHeader.priority = 0x00;
-							/* get new mailbox count value */
-							cnt = ec_nextmbxcnt(ec_slave[slave].mbx_cnt);
-							ec_slave[slave].mbx_cnt = cnt;
-							FOEp->MbxHeader.mbxtype = ECT_MBXT_FOE + (cnt << 4); /* FoE */
-							FOEp->OpCode = ECT_FOE_DATA;
-							FOEp->PacketNumber = htoel(++sendpacket);
-							memcpy(&FOEp->Data[0], p, segmentdata);
-							p += segmentdata;
-							/* send FoE data to slave */
-							wkc = ec_mbxsend(slave, (ec_mbxbuft *)&MbxOut, EC_TIMEOUTTXM);
-							if (wkc <= 0)
-								worktodo = FALSE;
-						}
-						else
-						{
-							/* FoE error */
-							wkc = -EC_ERR_TYPE_FOE_PACKETNUMBER;
-						}
-					}
-					else
-					if(aFOEp->OpCode == ECT_FOE_ERROR)
-					{
-						/* FoE error */
-						wkc = -EC_ERR_TYPE_FOE_ERROR;
-					}
-					else
-					{
-						/* unexpected mailbox received */
-						wkc = -EC_ERR_TYPE_PACKET_ERROR;
-					}
-				}
-				else
-				{
-					/* unexpected mailbox received */
-					wkc = -EC_ERR_TYPE_PACKET_ERROR;
-				}
-			}
-		} while (worktodo);	
-	}
-	
-	return wkc;
-}	
+      do
+      {
+        worktodo = FALSE;
+        /* clean mailboxbuffer */
+        ec_clearmbx(&MbxIn);
+        /* read slave response */
+        wkc = ec_mbxreceive(slave, (ec_mbxbuft *)&MbxIn, timeout);
+        if (wkc > 0) /* succeeded to read slave response ? */
+        {
+          /* slave response should be FoE */
+          if ((aFOEp->MbxHeader.mbxtype & 0x0f) == ECT_MBXT_FOE)
+          {
+            if (aFOEp->OpCode == ECT_FOE_ACK)
+            {
+              packetnumber = etohl(aFOEp->PacketNumber);
+              if (packetnumber == sendpacket)
+              {
+                tsize = psize;
+                if (tsize > maxdata)
+                {
+                  worktodo = TRUE;
+                  tsize = maxdata;
+                }
+                segmentdata = tsize;
+                psize -= segmentdata;
+                FOEp->MbxHeader.length = htoes(0x0006 + segmentdata);
+                FOEp->MbxHeader.address = htoes(0x0000);
+                FOEp->MbxHeader.priority = 0x00;
+                /* get new mailbox count value */
+                cnt = ec_nextmbxcnt(ec_slave[slave].mbx_cnt);
+                ec_slave[slave].mbx_cnt = cnt;
+                FOEp->MbxHeader.mbxtype = ECT_MBXT_FOE + (cnt << 4); /* FoE */
+                FOEp->OpCode = ECT_FOE_DATA;
+                FOEp->PacketNumber = htoel(++sendpacket);
+                memcpy(&FOEp->Data[0], p, segmentdata);
+                p += segmentdata;
+                /* send FoE data to slave */
+                wkc = ec_mbxsend(slave, (ec_mbxbuft *)&MbxOut, EC_TIMEOUTTXM);
+                if (wkc <= 0)
+                  worktodo = FALSE;
+              }
+              else
+              {
+                /* FoE error */
+                wkc = -EC_ERR_TYPE_FOE_PACKETNUMBER;
+              }
+            }
+            else if (aFOEp->OpCode == ECT_FOE_ERROR)
+            {
+              /* FoE error */
+              wkc = -EC_ERR_TYPE_FOE_ERROR;
+            }
+            else
+            {
+              /* unexpected mailbox received */
+              wkc = -EC_ERR_TYPE_PACKET_ERROR;
+            }
+          }
+          else
+          {
+            /* unexpected mailbox received */
+            wkc = -EC_ERR_TYPE_PACKET_ERROR;
+          }
+        }
+      } while (worktodo);
+    }
+
+    return wkc;
+  }

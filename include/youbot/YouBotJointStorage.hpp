@@ -51,36 +51,38 @@
  * License LGPL and BSD license along with this program.
  *
  ****************************************************************/
-namespace youbot {
+namespace youbot
+{
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Stores YouBotJoint informations which are needed in the driver
 ///////////////////////////////////////////////////////////////////////////////
-class YouBotJointStorage {
-  public:
-    unsigned int encoderTicksPerRound;
+class YouBotJointStorage
+{
+public:
+  unsigned int encoderTicksPerRound;
 
-    std::string jointName;
+  std::string jointName;
 
-    unsigned int jointNumber;
+  unsigned int jointNumber;
 
-    std::string jointNumberStr;
+  std::string jointNumberStr;
 
-    double gearRatio;
+  double gearRatio;
 
-    bool inverseMovementDirection;
+  bool inverseMovementDirection;
 
-    long upperLimit;
+  long upperLimit;
 
-    long lowerLimit;
+  long lowerLimit;
 
-    bool areLimitsActive;
+  bool areLimitsActive;
 
-    double torqueConstant;
+  double torqueConstant;
 
-    long bevorUpperLimit;
+  long bevorUpperLimit;
 
-    long bevorLowerLimit;
+  long bevorLowerLimit;
 
 };
 

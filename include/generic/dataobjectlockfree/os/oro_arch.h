@@ -1,6 +1,5 @@
 //#include "../rtt-config.h"
 
-
 #  if defined(_MSC_VER)
 #   include "generic/dataobjectlockfree/os/oro_msvc/oro_arch.h"
 #  elif defined(__GNUC__)

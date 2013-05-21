@@ -4,35 +4,42 @@
 
 using namespace youbot;
 
-YouBotBaseKinematicsTest::YouBotBaseKinematicsTest() {
+YouBotBaseKinematicsTest::YouBotBaseKinematicsTest()
+{
   char* location = getenv("YOUBOT_CONFIG_FOLDER_LOCATION");
-  if(location == NULL) throw std::runtime_error("YouBotBaseKinematicsTest.cpp: Could not find environment variable YOUBOT_CONFIG_FOLDER_LOCATION");
+  if (location == NULL)
+    throw std::runtime_error(
+        "YouBotBaseKinematicsTest.cpp: Could not find environment variable YOUBOT_CONFIG_FOLDER_LOCATION");
 
   EthercatMaster::getInstance("youbot-ethercat.cfg", location, true);
 
+}
+
+YouBotBaseKinematicsTest::~YouBotBaseKinematicsTest()
+{
 
 }
 
-YouBotBaseKinematicsTest::~YouBotBaseKinematicsTest() {
-
-}
-
-void YouBotBaseKinematicsTest::setUp() {
+void YouBotBaseKinematicsTest::setUp()
+{
   Logger::logginLevel = trace;
   updateCycle = 2000;
 
 }
 
-void YouBotBaseKinematicsTest::tearDown() {
+void YouBotBaseKinematicsTest::tearDown()
+{
   //	EthercatMaster::destroy();
 }
 
-void YouBotBaseKinematicsTest::youBotBaseKinematicsTest() {
+void YouBotBaseKinematicsTest::youBotBaseKinematicsTest()
+{
   char* configLocation = getenv("YOUBOT_CONFIG_FOLDER_LOCATION");
-  if(configLocation == NULL) throw std::runtime_error("YouBotArmTest.cpp: Could not find environment variable YOUBOT_CONFIG_FOLDER_LOCATION");
+  if (configLocation == NULL)
+    throw std::runtime_error("YouBotArmTest.cpp: Could not find environment variable YOUBOT_CONFIG_FOLDER_LOCATION");
 
   LOG(info) << __func__ << "\n";
-  YouBotBase myBase("youbot-base",configLocation);
+  YouBotBase myBase("youbot-base", configLocation);
   myBase.doJointCommutation();
   std::stringstream jointNameStream;
   boost::ptr_vector<DataTrace> myTrace;
@@ -47,84 +54,95 @@ void YouBotBaseKinematicsTest::youBotBaseKinematicsTest() {
   quantity<si::velocity> longitudinalVelocity = 0.0 * meter_per_second;
   quantity<si::velocity> transversalVelocity = 0.0 * meter_per_second;
   quantity<si::angular_velocity> angularVelocity = 0 * radian_per_second;
-/*
-  quantity<si::velocity> actualLongitudinalVelocity = 0 * meter_per_second;
-  quantity<si::velocity> actualTransversalVelocity = 0 * meter_per_second;
-  quantity<si::angular_velocity> actualAngularVelocity = 0 * radian_per_second;
+  /*
+   quantity<si::velocity> actualLongitudinalVelocity = 0 * meter_per_second;
+   quantity<si::velocity> actualTransversalVelocity = 0 * meter_per_second;
+   quantity<si::angular_velocity> actualAngularVelocity = 0 * radian_per_second;
 
-  quantity<si::length> actualLongitudinalPose = 0 * meter;
-  quantity<si::length> actualTransversalPose = 0 * meter;
-  quantity<si::plane_angle> actualAngle = 0 * radian;
-*/
-  for (int i = 1; i <= 4; i++) {
+   quantity<si::length> actualLongitudinalPose = 0 * meter;
+   quantity<si::length> actualTransversalPose = 0 * meter;
+   quantity<si::plane_angle> actualAngle = 0 * radian;
+   */
+  for (int i = 1; i <= 4; i++)
+  {
     jointNameStream << "Joint_" << i << "_" << __func__;
     myTrace.push_back(new DataTrace(myBase.getBaseJoint(i), jointNameStream.str(), true));
     jointNameStream.str("");
     myBase.getBaseJoint(i).setEncoderToZero();
   }
 
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 4; i++)
+  {
     myTrace[i].startTrace();
   }
 
   startTime = myTrace[0].getTimeDurationMilliSec();
-  overallTime = startTime + step6 +10;
+  overallTime = startTime + step6 + 10;
 
-  while (myTrace[0].getTimeDurationMilliSec() < overallTime) {
-    if (myTrace[0].getTimeDurationMilliSec() > startTime + step1) {
+  while (myTrace[0].getTimeDurationMilliSec() < overallTime)
+  {
+    if (myTrace[0].getTimeDurationMilliSec() > startTime + step1)
+    {
       longitudinalVelocity = 0.0 * meter_per_second;
       transversalVelocity = 0.0 * meter_per_second;
       angularVelocity = 0 * radian_per_second;
     }
     if (myTrace[0].getTimeDurationMilliSec() > startTime + step1
-            && myTrace[0].getTimeDurationMilliSec() < startTime + step2) {
+        && myTrace[0].getTimeDurationMilliSec() < startTime + step2)
+    {
       longitudinalVelocity = 0.2 * meter_per_second;
       transversalVelocity = 0.0 * meter_per_second;
       angularVelocity = 0 * radian_per_second;
     }
     if (myTrace[0].getTimeDurationMilliSec() > startTime + step2
-            && myTrace[0].getTimeDurationMilliSec() < startTime + step3) {
+        && myTrace[0].getTimeDurationMilliSec() < startTime + step3)
+    {
       longitudinalVelocity = 0.0 * meter_per_second;
       transversalVelocity = 0.2 * meter_per_second;
       angularVelocity = 0.0 * radian_per_second;
     }
-    
-        if (myTrace[0].getTimeDurationMilliSec() > startTime + step3
-            && myTrace[0].getTimeDurationMilliSec() < startTime + step4) {
+
+    if (myTrace[0].getTimeDurationMilliSec() > startTime + step3
+        && myTrace[0].getTimeDurationMilliSec() < startTime + step4)
+    {
       longitudinalVelocity = 0.0 * meter_per_second;
       transversalVelocity = 0.0 * meter_per_second;
       angularVelocity = 0.2 * radian_per_second;
     }
-    
-        if (myTrace[0].getTimeDurationMilliSec() > startTime + step4
-            && myTrace[0].getTimeDurationMilliSec() < startTime + step5) {
+
+    if (myTrace[0].getTimeDurationMilliSec() > startTime + step4
+        && myTrace[0].getTimeDurationMilliSec() < startTime + step5)
+    {
       longitudinalVelocity = 0.1 * meter_per_second;
       transversalVelocity = 0.1 * meter_per_second;
       angularVelocity = 0.0 * radian_per_second;
     }
-    
+
     if (myTrace[0].getTimeDurationMilliSec() > startTime + step5
-            && myTrace[0].getTimeDurationMilliSec() < startTime + step6) {
+        && myTrace[0].getTimeDurationMilliSec() < startTime + step6)
+    {
       longitudinalVelocity = 0.1 * meter_per_second;
       transversalVelocity = 0.1 * meter_per_second;
       angularVelocity = 0.0 * radian_per_second;
     }
-    
-    if (myTrace[0].getTimeDurationMilliSec() > startTime + step6) {
+
+    if (myTrace[0].getTimeDurationMilliSec() > startTime + step6)
+    {
       longitudinalVelocity = 0 * meter_per_second;
       transversalVelocity = 0 * meter_per_second;
       angularVelocity = 0 * radian_per_second;
     }
 
     myBase.setBaseVelocity(longitudinalVelocity, transversalVelocity, angularVelocity);
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++)
+    {
       myTrace[i].updateTrace();
     }
 
-
     SLEEP_MICROSEC(updateCycle);
   }
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 4; i++)
+  {
     myTrace[i].stopTrace();
     myTrace[i].plotTrace();
   }

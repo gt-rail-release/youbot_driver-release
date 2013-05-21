@@ -4,7 +4,6 @@ project(youbot_driver)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-########### ROS ###########
 find_package(catkin REQUIRED COMPONENTS rosconsole roscpp)
 find_package(Boost REQUIRED COMPONENTS thread date_time filesystem system regex)
 
@@ -85,10 +84,11 @@ add_subdirectory(src/display)
 
 ## Mark executables and/or libraries for installation
 install(TARGETS YouBotDriver
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
 
-#copy header files
+## Copy header files
 install(DIRECTORY include/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
   FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h"
@@ -97,4 +97,8 @@ install(DIRECTORY include/
 ## Copy config files
 install(DIRECTORY config
   DESTINATION ${CATKIN_PACKAGE_ETC_DESTINATION}
+)
+install(DIRECTORY ld/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/ld
+  FILES_MATCHING PATTERN "*.conf"
 ) 

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>youbot_driver</name>
-  <version>0.1.3</version>
+  <version>0.1.4</version>
   <description>Drivers for the KUKA youBot Robot</description>
 
   <maintainer email="rctoris@wpi.edu">Russell Toris</maintainer>
@@ -14,6 +14,7 @@
   <url type="repository">https://github.com/WPI-RAIL/youbot_driver</url>
 
   <buildtool_depend>catkin</buildtool_depend>
+
   <build_depend>rosconsole</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>cppunit</build_depend>

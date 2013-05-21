@@ -59,34 +59,47 @@
 #include "youbot/EthercatMasterInterface.hpp"
 #include "youbot/EthercatMasterWithoutThread.hpp"
 #include "youbot/EthercatMasterWithThread.hpp"
-namespace youbot {
+namespace youbot
+{
 
 ///////////////////////////////////////////////////////////////////////////////
 /// The Ethercat Master factory
 ///////////////////////////////////////////////////////////////////////////////
-class EthercatMaster {
-friend class YouBotJoint;
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  private:
-    static EthercatMasterInterface* instance;
+class EthercatMaster
+{
+  friend class YouBotJoint;
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+private:
+  static EthercatMasterInterface* instance;
 
-    EthercatMaster(){};
+  EthercatMaster()
+  {
+  }
+  ;
 
-    EthercatMaster(const EthercatMaster& ) {};
+  EthercatMaster(const EthercatMaster&)
+  {
+  }
+  ;
 
-    ~EthercatMaster(){};
+  ~EthercatMaster()
+  {
+  }
+  ;
 
+public:
+  ///creates a instance of the singleton EthercatMaster if there is none and returns a reference to it
+  ///@param configFile configuration file name incl. the extension
+  ///@param configFilePath the path where the configuration is located with a / at the end
+  ///@param ethercatMasterWithThread set it to false if you want to deactivate the communication thread
+  static EthercatMasterInterface& getInstance(const std::string configFile, const std::string configFilePath,
+                                              const bool ethercatMasterWithThread = true);
 
-  public:
-    ///creates a instance of the singleton EthercatMaster if there is none and returns a reference to it
-    ///@param configFile configuration file name incl. the extension
-    ///@param configFilePath the path where the configuration is located with a / at the end
-    ///@param ethercatMasterWithThread set it to false if you want to deactivate the communication thread
-    static EthercatMasterInterface& getInstance(const std::string configFile, const std::string configFilePath, const bool ethercatMasterWithThread = true);
+  static EthercatMasterInterface& getInstance();
 
-    /// destroy the singleton instance by calling the destructor
-    static void destroy();
+  /// destroy the singleton instance by calling the destructor
+  static void destroy();
 
 };
 

@@ -71,6 +71,6 @@ uint8 ec_getindex(void);
 int ec_outframe(uint8 idx, int sock);
 int ec_outframe_red(uint8 idx);
 int ec_waitinframe(uint8 idx, int timeout);
-int ec_srconfirm(uint8 idx,int timeout);
+int ec_srconfirm(uint8 idx, int timeout);
 
 #endif

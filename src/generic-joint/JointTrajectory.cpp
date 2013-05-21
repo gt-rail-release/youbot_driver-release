@@ -49,7 +49,7 @@
  *
  ****************************************************************/
 #include "generic-joint/JointTrajectory.hpp"
-namespace youbot {
-
+namespace youbot
+{
 
 } // namespace youbot
