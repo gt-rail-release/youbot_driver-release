@@ -1,0 +1,24 @@
+From a26d418a973aace59585c0d9a342ea7d46126f2e Mon Sep 17 00:00:00 2001
+From: Russell Toris <rctoris@wpi.edu>
+Date: Tue, 21 May 2013 11:55:04 -0400
+Subject: [PATCH 3/3] postinst and postrm scripts added
+
+---
+ debian/postinst |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/debian/postinst b/debian/postinst
+index 52d9e2e..71e56ff 100755
+--- a/debian/postinst
++++ b/debian/postinst
+@@ -2,5 +2,5 @@
+ 
+ sudo setcap cap_net_raw+ep /opt/ros/groovy/lib/youbot_driver/base_arm_gripper_test
+ sudo setcap cap_net_raw+ep /opt/ros/groovy/lib/youbot_driver/displayIpAddress
+-sudo cp /opt/ros/groovy/share/youbot_driver/ld/ros.conf /etc/ld.so.conf.d
++sudo cp /opt/ros/groovy/share/youbot_driver/ld/*.conf /etc/ld.so.conf.d
+ sudo ldconfig
+\ No newline at end of file
+-- 
+1.7.9.5
+

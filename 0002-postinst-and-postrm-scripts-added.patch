@@ -1,7 +1,7 @@
-From 66206ca1a7536a9aba83b2298142c4c36b83c50f Mon Sep 17 00:00:00 2001
+From 3e83bc1d8b8b8974ebfa996c4eaaf45fe6a54bd0 Mon Sep 17 00:00:00 2001
 From: Russell Toris <rctoris@wpi.edu>
 Date: Tue, 21 May 2013 11:46:48 -0400
-Subject: [PATCH 2/2] postinst and postrm scripts added
+Subject: [PATCH 2/3] postinst and postrm scripts added
 
 ---
  debian/postinst |    4 +++-
