@@ -1,0 +1,39 @@
+From 9faa52e74a27829584485c899c6ea43e94609d81 Mon Sep 17 00:00:00 2001
+From: Russell Toris <rctoris@wpi.edu>
+Date: Tue, 21 May 2013 11:46:48 -0400
+Subject: [PATCH 2/2] postinst and postrm scripts added
+
+---
+ debian/postinst |    4 +++-
+ debian/postrm   |    4 ++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+ create mode 100755 debian/postrm
+
+diff --git a/debian/postinst b/debian/postinst
+index 6382446..52d9e2e 100755
+--- a/debian/postinst
++++ b/debian/postinst
+@@ -1,4 +1,6 @@
+ #!/bin/sh
+ 
+ sudo setcap cap_net_raw+ep /opt/ros/groovy/lib/youbot_driver/base_arm_gripper_test
+-sudo setcap cap_net_raw+ep /opt/ros/groovy/lib/youbot_driver/displayIpAddress
+\ No newline at end of file
++sudo setcap cap_net_raw+ep /opt/ros/groovy/lib/youbot_driver/displayIpAddress
++sudo cp /opt/ros/groovy/share/youbot_driver/ld/ros.conf /etc/ld.so.conf.d
++sudo ldconfig
+\ No newline at end of file
+diff --git a/debian/postrm b/debian/postrm
+new file mode 100755
+index 0000000..8c738dd
+--- /dev/null
++++ b/debian/postrm
+@@ -0,0 +1,4 @@
++#!/bin/sh
++
++sudo rm /etc/ld.so.conf.d/groovy.conf
++sudo ldconfig
+\ No newline at end of file
+-- 
+1.7.9.5
+

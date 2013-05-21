@@ -1,7 +1,7 @@
-From 85394d9e07c297bbae8db27715f8f26e4f62d719 Mon Sep 17 00:00:00 2001
+From 769f0c7828a21a7ca9387c9c1529724a769b826c Mon Sep 17 00:00:00 2001
 From: Russell Toris <rctoris@wpi.edu>
 Date: Mon, 20 May 2013 14:32:58 -0400
-Subject: [PATCH] postinst script added
+Subject: [PATCH 1/2] postinst script added
 
 ---
  debian/postinst |    4 ++++
