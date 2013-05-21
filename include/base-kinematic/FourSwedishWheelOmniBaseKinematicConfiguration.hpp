@@ -56,31 +56,34 @@
 #include "generic/Logger.hpp"
 #include "generic/Units.hpp"
 #include "generic/Exceptions.hpp"
-namespace youbot {
+namespace youbot
+{
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Configuration for the base kinematic with four swedish wheels.
 ///////////////////////////////////////////////////////////////////////////////
-class FourSwedishWheelOmniBaseKinematicConfiguration {
-  public:
-    FourSwedishWheelOmniBaseKinematicConfiguration();
+class FourSwedishWheelOmniBaseKinematicConfiguration
+{
+public:
+  FourSwedishWheelOmniBaseKinematicConfiguration();
 
-    ~FourSwedishWheelOmniBaseKinematicConfiguration();
+  ~FourSwedishWheelOmniBaseKinematicConfiguration();
 
-    FourSwedishWheelOmniBaseKinematicConfiguration(const FourSwedishWheelOmniBaseKinematicConfiguration & source);
+  FourSwedishWheelOmniBaseKinematicConfiguration(const FourSwedishWheelOmniBaseKinematicConfiguration & source);
 
-    FourSwedishWheelOmniBaseKinematicConfiguration & operator=(const FourSwedishWheelOmniBaseKinematicConfiguration & source);
+  FourSwedishWheelOmniBaseKinematicConfiguration & operator=(
+      const FourSwedishWheelOmniBaseKinematicConfiguration & source);
 
-    quantity<si::length> wheelRadius;
+  quantity<si::length> wheelRadius;
 
-    quantity<si::length> lengthBetweenFrontWheels;
+  quantity<si::length> lengthBetweenFrontWheels;
 
-    quantity<si::length> lengthBetweenFrontAndRearWheels;
+  quantity<si::length> lengthBetweenFrontAndRearWheels;
 
-    //how far sideways in one wheel rotation compared to forward
-    double slideRatio;
+  //how far sideways in one wheel rotation compared to forward
+  double slideRatio;
 
-    double rotationRatio;
+  double rotationRatio;
 
 };
 

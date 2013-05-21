@@ -70,78 +70,79 @@
 #include "one-dof-gripper/OneDOFGripperData.hpp"
 #include "youbot/YouBotGripperParameter.hpp"
 
-namespace youbot {
+namespace youbot
+{
 
 ///////////////////////////////////////////////////////////////////////////////
 /// One bar of the youBot gripper
 ///////////////////////////////////////////////////////////////////////////////
-class YouBotGripperBar {
-  public:
-    YouBotGripperBar(const unsigned int barNo, const unsigned int jointNo, const std::string& configFilePath);
+class YouBotGripperBar
+{
+public:
+  YouBotGripperBar(const unsigned int barNo, const unsigned int jointNo, const std::string& configFilePath);
 
-    virtual ~YouBotGripperBar();
+  virtual ~YouBotGripperBar();
 
-    virtual void setConfigurationParameter(const MaxEncoderValue& parameter);
+  virtual void setConfigurationParameter(const MaxEncoderValue& parameter);
 
-    virtual void getConfigurationParameter(MaxEncoderValue& parameter) const;
+  virtual void getConfigurationParameter(MaxEncoderValue& parameter) const;
 
-    virtual void getConfigurationParameter(MaxTravelDistance& parameter) const;
+  virtual void getConfigurationParameter(MaxTravelDistance& parameter) const;
 
-    virtual void setConfigurationParameter(const MaxTravelDistance& parameter);
+  virtual void setConfigurationParameter(const MaxTravelDistance& parameter);
 
-    virtual void setConfigurationParameter(const BarSpacingOffset& parameter);
+  virtual void setConfigurationParameter(const BarSpacingOffset& parameter);
 
-    virtual void getConfigurationParameter(BarSpacingOffset& parameter) const;
+  virtual void getConfigurationParameter(BarSpacingOffset& parameter) const;
 
-    virtual void setConfigurationParameter(const GripperBarName& parameter);
+  virtual void setConfigurationParameter(const GripperBarName& parameter);
 
-    virtual void getConfigurationParameter(GripperBarName& parameter) const;
+  virtual void getConfigurationParameter(GripperBarName& parameter) const;
 
-    virtual void getConfigurationParameter(YouBotGripperParameter& parameter) const;
+  virtual void getConfigurationParameter(YouBotGripperParameter& parameter) const;
 
-    virtual void setConfigurationParameter(const YouBotGripperParameter& parameter);
+  virtual void setConfigurationParameter(const YouBotGripperParameter& parameter);
 
-    virtual void getConfigurationParameter(YouBotSlaveMailboxMsg& parameter) const;
+  virtual void getConfigurationParameter(YouBotSlaveMailboxMsg& parameter) const;
 
-    virtual void setData(const GripperBarEncoderSetpoint& encoderSetpoint);
+  virtual void setData(const GripperBarEncoderSetpoint& encoderSetpoint);
 
-    virtual void getData(GripperSensedVelocity& barVelocity) const;
+  virtual void getData(GripperSensedVelocity& barVelocity) const;
 
-    virtual void getData(GripperSensedBarPosition& barPosition) const;
+  virtual void getData(GripperSensedBarPosition& barPosition) const;
 
-    virtual void setData(GripperBarPositionSetPoint& barPosition);
+  virtual void setData(GripperBarPositionSetPoint& barPosition);
 
-    void parseGripperErrorFlags(const unsigned int& errosFlags);
+  void parseGripperErrorFlags(const unsigned int& errosFlags);
 
+private:
+  YouBotGripperBar(const YouBotGripperBar & source);
 
-  private:
-    YouBotGripperBar(const YouBotGripperBar & source);
+  YouBotGripperBar & operator=(const YouBotGripperBar & source);
 
-    YouBotGripperBar & operator=(const YouBotGripperBar & source);
+  void parseMailboxStatusFlags(const YouBotSlaveMailboxMsg& mailboxMsg) const;
 
-    void parseMailboxStatusFlags(const YouBotSlaveMailboxMsg& mailboxMsg) const;
+  bool setValueToMotorContoller(const YouBotSlaveMailboxMsg& mailboxMsg) const;
 
-    bool setValueToMotorContoller(const YouBotSlaveMailboxMsg& mailboxMsg) const;
+  bool retrieveValueFromMotorContoller(YouBotSlaveMailboxMsg& message) const;
 
-    bool retrieveValueFromMotorContoller(YouBotSlaveMailboxMsg& message) const;
+  quantity<si::length> maxTravelDistance;
 
-    quantity<si::length> maxTravelDistance;
+  unsigned int maxEncoderValue;
 
-    unsigned int maxEncoderValue;
+  quantity<si::length> barSpacingOffset;
 
-    quantity<si::length> barSpacingOffset;
+  EthercatMasterInterface* ethercatMaster;
 
-    EthercatMasterInterface* ethercatMaster;
+  unsigned int timeTillNextMailboxUpdate;
 
-    unsigned int timeTillNextMailboxUpdate;
+  unsigned int mailboxMsgRetries;
 
-    unsigned int mailboxMsgRetries;
+  unsigned int jointNumber;
 
-    unsigned int jointNumber;
+  unsigned int barNo;
 
-    unsigned int barNo;
-
-    std::string name;
+  std::string name;
 
 };
 

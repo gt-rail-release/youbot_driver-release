@@ -72,80 +72,81 @@
 
 using namespace boost::posix_time;
 
-namespace youbot {
+namespace youbot
+{
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Creates a trace of one parameter of the gripper
 ///////////////////////////////////////////////////////////////////////////////
-class GripperDataTrace {
-  public:
-    GripperDataTrace(YouBotGripperBar& youBotGripperBar, const std::string Name, const bool overwriteFiles = false);
+class GripperDataTrace
+{
+public:
+  GripperDataTrace(YouBotGripperBar& youBotGripperBar, const std::string Name, const bool overwriteFiles = false);
 
-    virtual ~GripperDataTrace();
+  virtual ~GripperDataTrace();
 
-    void startTrace(const std::string parameterName, const std::string unit);
+  void startTrace(const std::string parameterName, const std::string unit);
 
-    void stopTrace();
+  void stopTrace();
 
-    void plotTrace();
+  void plotTrace();
 
-    void updateTrace(const double parameterValue);
+  void updateTrace(const double parameterValue);
 
-    unsigned long getTimeDurationMilliSec();
+  unsigned long getTimeDurationMilliSec();
 
+private:
+  GripperDataTrace(const GripperDataTrace & source);
 
-  private:
-    GripperDataTrace(const GripperDataTrace & source);
+  GripperDataTrace & operator=(const GripperDataTrace & source);
 
-    GripperDataTrace & operator=(const GripperDataTrace & source);
+  YouBotGripperBar& gripperBar;
 
-    YouBotGripperBar& gripperBar;
+  JointSensedAngle sensedAngle;
 
-    JointSensedAngle sensedAngle;
+  JointSensedEncoderTicks sensedEncoderTicks;
 
-    JointSensedEncoderTicks sensedEncoderTicks;
+  JointSensedVelocity sensedVelocity;
 
-    JointSensedVelocity sensedVelocity;
+  JointSensedRoundsPerMinute sensedRoundsPerMinute;
 
-    JointSensedRoundsPerMinute sensedRoundsPerMinute;
+  JointSensedCurrent sensedCurrent;
 
-    JointSensedCurrent sensedCurrent;
+  JointSensedTorque sensedTorque;
 
-    JointSensedTorque sensedTorque;
+  std::fstream file;
 
-    std::fstream file;
+  JointAngleSetpoint angleSetpoint;
 
-    JointAngleSetpoint angleSetpoint;
+  JointVelocitySetpoint velocitySetpoint;
 
-    JointVelocitySetpoint velocitySetpoint;
+  JointRoundsPerMinuteSetpoint roundsPerMinuteSetpoint;
 
-    JointRoundsPerMinuteSetpoint roundsPerMinuteSetpoint;
+  JointCurrentSetpoint currentSetpoint;
 
-    JointCurrentSetpoint currentSetpoint;
+  JointTorqueSetpoint torqueSetpoint;
 
-    JointTorqueSetpoint torqueSetpoint;
+  JointPWMSetpoint PWMSetpoint;
 
-    JointPWMSetpoint PWMSetpoint;
+  JointEncoderSetpoint encoderSetpoint;
 
-    JointEncoderSetpoint encoderSetpoint;
+  std::fstream parametersBeginTraceFile;
 
-    std::fstream parametersBeginTraceFile;
+  std::fstream parametersEndTraceFile;
 
-    std::fstream parametersEndTraceFile;
+  ptime traceStartTime;
 
-    ptime traceStartTime;
+  time_duration timeDuration;
 
-    time_duration timeDuration;
+  unsigned long timeDurationMicroSec;
 
-    unsigned long timeDurationMicroSec;
+  JointSensedPWM actualPWM;
 
-    JointSensedPWM actualPWM;
+  std::vector<YouBotGripperParameter*> parameterVector;
 
-    std::vector<YouBotGripperParameter*> parameterVector;
+  std::string name;
 
-    std::string name;
-
-    std::string path;
+  std::string path;
 
 };
 

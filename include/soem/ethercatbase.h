@@ -48,8 +48,8 @@
 
 int ec_setupdatagram(void *frame, uint8 com, uint8 idx, uint16 ADP, uint16 ADO, uint16 length, void *data);
 int ec_adddatagram(void *frame, uint8 com, uint8 idx, boolean more, uint16 ADP, uint16 ADO, uint16 length, void *data);
-int ec_BWR(uint16 ADP,uint16 ADO,uint16 length,void *data,int timeout);
-int ec_BRD(uint16 ADP,uint16 ADO,uint16 length,void *data,int timeout);
+int ec_BWR(uint16 ADP, uint16 ADO, uint16 length, void *data, int timeout);
+int ec_BRD(uint16 ADP, uint16 ADO, uint16 length, void *data, int timeout);
 int ec_APRD(uint16 ADP, uint16 ADO, uint16 length, void *data, int timeout);
 int ec_ARMW(uint16 ADP, uint16 ADO, uint16 length, void *data, int timeout);
 int ec_FRMW(uint16 ADP, uint16 ADO, uint16 length, void *data, int timeout);

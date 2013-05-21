@@ -1,4 +1,3 @@
-
 #ifndef __ORO_ARCH_POWERPC__
 #define __ORO_ARCH_POWERPC__
 

@@ -56,20 +56,22 @@
 #include "generic-joint/JointData.hpp"
 #include "generic-joint/JointParameter.hpp"
 
-namespace youbot {
+namespace youbot
+{
 
 ///////////////////////////////////////////////////////////////////////////////
 /// abstract joint
 ///////////////////////////////////////////////////////////////////////////////
-class Joint {
-  public:
-    virtual void setData(const JointDataSetpoint& data) = 0;
+class Joint
+{
+public:
+  virtual void setData(const JointDataSetpoint& data) = 0;
 
-    virtual void getData(JointData& data) = 0;
+  virtual void getData(JointData& data) = 0;
 
-    virtual void setConfigurationParameter(const JointParameter& parameter) = 0;
+  virtual void setConfigurationParameter(const JointParameter& parameter) = 0;
 
-    virtual void getConfigurationParameter(JointParameter& parameter) = 0;
+  virtual void getConfigurationParameter(JointParameter& parameter) = 0;
 
 };
 

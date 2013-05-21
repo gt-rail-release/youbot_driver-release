@@ -1,7 +1,7 @@
 Original Authors
 ----------------
 
- * [Jan Paulus](https://github.com/janpaulus)
+ * Jan Paulus
 
 Contributors
 ------------

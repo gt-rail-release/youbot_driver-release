@@ -4,41 +4,49 @@
 
 using namespace youbot;
 
-YouBotArmTestWithoutThread::YouBotArmTestWithoutThread():dof(5) {
-
-
-
-}
-
-YouBotArmTestWithoutThread::~YouBotArmTestWithoutThread() {
+YouBotArmTestWithoutThread::YouBotArmTestWithoutThread() :
+    dof(5)
+{
 
 }
 
-void YouBotArmTestWithoutThread::setUp() {
+YouBotArmTestWithoutThread::~YouBotArmTestWithoutThread()
+{
+
+}
+
+void YouBotArmTestWithoutThread::setUp()
+{
   char* location = getenv("YOUBOT_CONFIG_FOLDER_LOCATION");
-  if(location == NULL) throw std::runtime_error("YouBotArmTestWithoutThread.cpp: Could not find environment variable YOUBOT_CONFIG_FOLDER_LOCATION");
+  if (location == NULL)
+    throw std::runtime_error(
+        "YouBotArmTestWithoutThread.cpp: Could not find environment variable YOUBOT_CONFIG_FOLDER_LOCATION");
 
   Logger::logginLevel = trace;
   updateCycle = 2000;
   ethercatMaster = &EthercatMaster::getInstance("youbot-ethercat.cfg", location, false);
-	if(ethercatMaster->isThreadActive()){
-		LOG(error) << "Thread Active";
-		EthercatMaster::destroy();
-		ethercatMaster = &EthercatMaster::getInstance("youbot-ethercat.cfg", location, false);
-	}
+  if (ethercatMaster->isThreadActive())
+  {
+    LOG(error) << "Thread Active";
+    EthercatMaster::destroy();
+    ethercatMaster = &EthercatMaster::getInstance("youbot-ethercat.cfg", location, false);
+  }
 
 }
 
-void YouBotArmTestWithoutThread::tearDown() {
-  	EthercatMaster::destroy();
+void YouBotArmTestWithoutThread::tearDown()
+{
+  EthercatMaster::destroy();
 }
 
-void YouBotArmTestWithoutThread::youBotArmTest() {
+void YouBotArmTestWithoutThread::youBotArmTest()
+{
   char* configLocation = getenv("YOUBOT_CONFIG_FOLDER_LOCATION");
-  if(configLocation == NULL) throw std::runtime_error("YouBotArmTest.cpp: Could not find environment variable YOUBOT_CONFIG_FOLDER_LOCATION");
+  if (configLocation == NULL)
+    throw std::runtime_error("YouBotArmTest.cpp: Could not find environment variable YOUBOT_CONFIG_FOLDER_LOCATION");
 
   LOG(info) << __func__ << "\n";
-  YouBotManipulator myArm("youbot-manipulator",configLocation);
+  YouBotManipulator myArm("youbot-manipulator", configLocation);
   myArm.doJointCommutation();
   myArm.calibrateManipulator();
 
@@ -70,18 +78,18 @@ void YouBotArmTestWithoutThread::youBotArmTest() {
   desiredJointAngle.angle = 0.2 * radian;
   foldedpose.push_back(desiredJointAngle);
 
-
-  for (int i = 1; i <= dof; i++) {
+  for (int i = 1; i <= dof; i++)
+  {
     jointNameStream << "Joint_" << i << "_" << __func__;
     myTrace.push_back(new DataTrace(myArm.getArmJoint(i), jointNameStream.str(), true));
     jointNameStream.str("");
   }
 
-
-  for (int i = 0; i < dof; i++) {
+  for (int i = 0; i < dof; i++)
+  {
     myTrace[i].startTrace();
   }
-  
+
   ClearMotorControllerTimeoutFlag clearTimeoutFlag;
   myArm.getArmJoint(1).setConfigurationParameter(clearTimeoutFlag);
   myArm.getArmJoint(2).setConfigurationParameter(clearTimeoutFlag);
@@ -89,22 +97,24 @@ void YouBotArmTestWithoutThread::youBotArmTest() {
   myArm.getArmJoint(4).setConfigurationParameter(clearTimeoutFlag);
   myArm.getArmJoint(5).setConfigurationParameter(clearTimeoutFlag);
 
-
-  if (!ethercatMaster->isThreadActive()) {
-      ethercatMaster->sendProcessData();
-      ethercatMaster->receiveProcessData();
-   }
-  
+  if (!ethercatMaster->isThreadActive())
+  {
+    ethercatMaster->sendProcessData();
+    ethercatMaster->receiveProcessData();
+  }
 
   // 1 sec no movement
   startTime = myTrace[0].getTimeDurationMilliSec();
-  overallTime = startTime + 1000;  
-  while (myTrace[0].getTimeDurationMilliSec() < overallTime) {
-    if (!ethercatMaster->isThreadActive()) {
+  overallTime = startTime + 1000;
+  while (myTrace[0].getTimeDurationMilliSec() < overallTime)
+  {
+    if (!ethercatMaster->isThreadActive())
+    {
       ethercatMaster->sendProcessData();
       ethercatMaster->receiveProcessData();
     }
-    for (int i = 0; i < dof; i++) {
+    for (int i = 0; i < dof; i++)
+    {
       myTrace[i].updateTrace();
     }
     SLEEP_MICROSEC(updateCycle);
@@ -114,47 +124,57 @@ void YouBotArmTestWithoutThread::youBotArmTest() {
   startTime = myTrace[0].getTimeDurationMilliSec();
   overallTime = startTime + 5000;
   myArm.setJointData(upstretchedpose);
-  while (myTrace[0].getTimeDurationMilliSec() < overallTime) {
-    if (!ethercatMaster->isThreadActive()) {
+  while (myTrace[0].getTimeDurationMilliSec() < overallTime)
+  {
+    if (!ethercatMaster->isThreadActive())
+    {
       ethercatMaster->sendProcessData();
       ethercatMaster->receiveProcessData();
     }
-    for (int i = 0; i < dof; i++) {
+    for (int i = 0; i < dof; i++)
+    {
       myTrace[i].updateTrace();
     }
     SLEEP_MICROSEC(updateCycle);
   }
-  
+
   // move to folded position
   startTime = myTrace[0].getTimeDurationMilliSec();
   overallTime = startTime + 5000;
   myArm.setJointData(foldedpose);
-  while (myTrace[0].getTimeDurationMilliSec() < overallTime) {
-    if (!ethercatMaster->isThreadActive()) {
+  while (myTrace[0].getTimeDurationMilliSec() < overallTime)
+  {
+    if (!ethercatMaster->isThreadActive())
+    {
       ethercatMaster->sendProcessData();
       ethercatMaster->receiveProcessData();
     }
-    for (int i = 0; i < dof; i++) {
+    for (int i = 0; i < dof; i++)
+    {
       myTrace[i].updateTrace();
     }
     SLEEP_MICROSEC(updateCycle);
   }
-  
+
   // 1 sec no movement
   startTime = myTrace[0].getTimeDurationMilliSec();
-  overallTime = startTime + 1000;  
-  while (myTrace[0].getTimeDurationMilliSec() < overallTime) {
-    if (!ethercatMaster->isThreadActive()) {
+  overallTime = startTime + 1000;
+  while (myTrace[0].getTimeDurationMilliSec() < overallTime)
+  {
+    if (!ethercatMaster->isThreadActive())
+    {
       ethercatMaster->sendProcessData();
       ethercatMaster->receiveProcessData();
     }
-    for (int i = 0; i < dof; i++) {
+    for (int i = 0; i < dof; i++)
+    {
       myTrace[i].updateTrace();
     }
     SLEEP_MICROSEC(updateCycle);
   }
-  
-  for (int i = 0; i < dof; i++) {
+
+  for (int i = 0; i < dof; i++)
+  {
     myTrace[i].stopTrace();
     myTrace[i].plotTrace();
   }

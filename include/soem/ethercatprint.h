@@ -46,9 +46,9 @@
 #ifndef _ethercatprint_
 #define _ethercatprint_
 
-char* ec_sdoerror2string( uint16 sdoerrorcode);
-char* ec_ALstatuscode2string( uint16 ALstatuscode);
-char* ec_soeerror2string( uint16 errorcode);
+char* ec_sdoerror2string(uint16 sdoerrorcode);
+char* ec_ALstatuscode2string(uint16 ALstatuscode);
+char* ec_soeerror2string(uint16 errorcode);
 char* ec_elist2string(void);
 
 #endif

@@ -36,10 +36,11 @@
 #include <cstdio>
 #include "generic/PidController.hpp"
 
-namespace youbot {
+namespace youbot
+{
 
 PidController::PidController(double P, double I, double D, double I1, double I2) :
-  p_gain_(P), i_gain_(I), d_gain_(D), i_max_(I1), i_min_(I2)
+    p_gain_(P), i_gain_(I), d_gain_(D), i_max_(I1), i_min_(I2)
 {
   p_error_last_ = 0.0;
   p_error_ = 0.0;
@@ -91,13 +92,11 @@ void PidController::setGains(double P, double I, double D, double I1, double I2)
   i_min_ = I2;
 }
 
-
 double PidController::updatePid(double error, boost::posix_time::time_duration dt)
 {
   double p_term, d_term, i_term;
   p_error_ = error; //this is pError = pState-pTarget
-  double deltatime = (double)dt.total_microseconds()/1000.0; //in milli seconds
-  
+  double deltatime = (double)dt.total_microseconds() / 1000.0; //in milli seconds
 
   if (deltatime == 0.0 || isnan(error) || isinf(error))
     return 0.0;
@@ -106,7 +105,7 @@ double PidController::updatePid(double error, boost::posix_time::time_duration d
   p_term = p_gain_ * p_error_;
 
   // Calculate the integral error
-  
+
   i_error_ = last_i_error + deltatime * p_error_;
   last_i_error = deltatime * p_error_;
 
@@ -117,12 +116,12 @@ double PidController::updatePid(double error, boost::posix_time::time_duration d
   if (i_term > i_max_)
   {
     i_term = i_max_;
-    i_error_=i_term/i_gain_;
+    i_error_ = i_term / i_gain_;
   }
   else if (i_term < i_min_)
   {
     i_term = i_min_;
-    i_error_=i_term/i_gain_;
+    i_error_ = i_term / i_gain_;
   }
 
   // Calculate the derivative error
@@ -134,23 +133,21 @@ double PidController::updatePid(double error, boost::posix_time::time_duration d
   // Calculate derivative contribution to command
   d_term = d_gain_ * d_error_;
   cmd_ = -p_term - i_term - d_term;
-  
- // printf(" p_error_ %lf  i_error_ %lf  p_term %lf i_term %lf  dt %lf out %lf\n", p_error_, i_error_, p_term, i_term, deltatime, cmd_);
+
+  // printf(" p_error_ %lf  i_error_ %lf  p_term %lf i_term %lf  dt %lf out %lf\n", p_error_, i_error_, p_term, i_term, deltatime, cmd_);
 
   return cmd_;
 }
-
 
 double PidController::updatePid(double error, double error_dot, boost::posix_time::time_duration dt)
 {
   double p_term, d_term, i_term;
   p_error_ = error; //this is pError = pState-pTarget
   d_error_ = error_dot;
-  double deltatime = (double)dt.total_microseconds()/1000.0;  //in milli seconds
+  double deltatime = (double)dt.total_microseconds() / 1000.0;  //in milli seconds
 
   if (deltatime == 0.0 || isnan(error) || isinf(error) || isnan(error_dot) || isinf(error_dot))
     return 0.0;
-
 
   // Calculate proportional contribution to command
   p_term = p_gain_ * p_error_;
@@ -158,9 +155,9 @@ double PidController::updatePid(double error, double error_dot, boost::posix_tim
   // Calculate the integral error
   i_error_ = last_i_error + deltatime * p_error_;
   last_i_error = deltatime * p_error_;
-  
- // i_error_ = i_error_ + deltatime * p_error_;
- //   printf("i_error_ %lf dt.fractional_seconds() %lf\n", i_error_, deltatime);
+
+  // i_error_ = i_error_ + deltatime * p_error_;
+  //   printf("i_error_ %lf dt.fractional_seconds() %lf\n", i_error_, deltatime);
 
   //Calculate integral contribution to command
   i_term = i_gain_ * i_error_;
@@ -169,12 +166,12 @@ double PidController::updatePid(double error, double error_dot, boost::posix_tim
   if (i_term > i_max_)
   {
     i_term = i_max_;
-    i_error_=i_term/i_gain_;
+    i_error_ = i_term / i_gain_;
   }
   else if (i_term < i_min_)
   {
     i_term = i_min_;
-    i_error_=i_term/i_gain_;
+    i_error_ = i_term / i_gain_;
   }
 
   // Calculate derivative contribution to command
@@ -183,8 +180,6 @@ double PidController::updatePid(double error, double error_dot, boost::posix_tim
 
   return cmd_;
 }
-
-
 
 void PidController::setCurrentCmd(double cmd)
 {

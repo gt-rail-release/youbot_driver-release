@@ -1,7 +1,5 @@
 /*!
-
 @page configuration Configuration
-
 
 @par Configuration file
 
@@ -14,13 +12,11 @@ The Topology of the youBot joint can be configured in the youbot-base.cfg and yo
 
 Additionally the config files contain joint specific parameters like the gear ratio or the encoder ticks per round. These parameters are needed by the API to do proper calculations. 
 
-
 @par Configuration parameters
 
 
 The motor controller parameters like the PID controller values can be modified by youbot::YouBotJointParameter.
 This is a list of the parameters:
-
 
 - youbot::MaximumPositioningVelocity in s^-1 rad 
 - youbot::MotorAcceleration in s^-2 rad
@@ -56,9 +52,5 @@ The switching threshold defines the joint speed when the second parameters set s
 - youbot::DParameterSecondParametersSpeedControl
 - youbot::IClippingParameterSecondParametersSpeedControl
 
-
-
 There is also a stand alone application to configure the joint parameters.  You can find it here:  https://github.com/youbot/youbot_applications/tree/master/joint_configurator
-
-
 */

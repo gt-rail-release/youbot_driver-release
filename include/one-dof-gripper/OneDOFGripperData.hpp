@@ -53,59 +53,67 @@
  ****************************************************************/
 #include "generic/Units.hpp"
 #include "generic-gripper/GripperData.hpp"
-namespace youbot {
+namespace youbot
+{
 
 ///////////////////////////////////////////////////////////////////////////////
 /// abstract class of data for gripper with one degree of freedom
 ///////////////////////////////////////////////////////////////////////////////
-class OneDOFGripperData : public GripperData {
+class OneDOFGripperData : public GripperData
+{
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Setpoint length of the bar spacing for a one DOF gripper
 ///////////////////////////////////////////////////////////////////////////////
-class GripperBarSpacingSetPoint : public OneDOFGripperData {
-  public:
-    quantity<si::length> barSpacing;
+class GripperBarSpacingSetPoint : public OneDOFGripperData
+{
+public:
+  quantity<si::length> barSpacing;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// The sensed bar spacing for a one DOF gripper
 ///////////////////////////////////////////////////////////////////////////////
-class GripperSensedBarSpacing : public OneDOFGripperData {
-  public:
-    quantity<si::length> barSpacing;
+class GripperSensedBarSpacing : public OneDOFGripperData
+{
+public:
+  quantity<si::length> barSpacing;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// The sensed bar velocity for a one DOF gripper
 ///////////////////////////////////////////////////////////////////////////////
-class GripperSensedVelocity : public OneDOFGripperData {
-  public:
-    long barVelocity;
+class GripperSensedVelocity : public OneDOFGripperData
+{
+public:
+  long barVelocity;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// The encoder setpoint for one bar
 ///////////////////////////////////////////////////////////////////////////////
-class GripperBarEncoderSetpoint : public OneDOFGripperData {
-  public:
-    int barEncoder;
+class GripperBarEncoderSetpoint : public OneDOFGripperData
+{
+public:
+  int barEncoder;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// The bar position for a one gripper bar
 ///////////////////////////////////////////////////////////////////////////////
-class GripperBarPositionSetPoint : public OneDOFGripperData {
-  public:
-    quantity<si::length> barPosition;
+class GripperBarPositionSetPoint : public OneDOFGripperData
+{
+public:
+  quantity<si::length> barPosition;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// The sensed bar position for a one gripper bar
 ///////////////////////////////////////////////////////////////////////////////
-class GripperSensedBarPosition : public OneDOFGripperData {
-  public:
-    quantity<si::length> barPosition;
+class GripperSensedBarPosition : public OneDOFGripperData
+{
+public:
+  quantity<si::length> barPosition;
 
 };
 

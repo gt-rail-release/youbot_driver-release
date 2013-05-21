@@ -7,8 +7,9 @@
  * Structure that contains an int for atomic
  * operations.
  */
-typedef struct {
-    int volatile cnt;
+typedef struct
+{
+  int volatile cnt;
 } oro_atomic_t;
 
 #define ORO_ATOMIC_SETUP	oro_atomic_set
@@ -23,7 +24,7 @@ typedef struct {
  */
 static __inline__ void oro_atomic_add(oro_atomic_t *a_int, int n)
 {
-    (void)__sync_add_and_fetch(&a_int->cnt, n);
+  (void)__sync_add_and_fetch(&a_int->cnt, n);
 }
 
 /**
@@ -31,7 +32,7 @@ static __inline__ void oro_atomic_add(oro_atomic_t *a_int, int n)
  */
 static __inline__ void oro_atomic_sub(oro_atomic_t *a_int, int n)
 {
-    (void)__sync_sub_and_fetch(&a_int->cnt, n);
+  (void)__sync_sub_and_fetch(&a_int->cnt, n);
 }
 
 /**
@@ -39,7 +40,7 @@ static __inline__ void oro_atomic_sub(oro_atomic_t *a_int, int n)
  */
 static __inline__ int oro_atomic_sub_and_test(oro_atomic_t *a_int, int n)
 {
-    return !(__sync_sub_and_fetch(&a_int->cnt, n));
+  return !(__sync_sub_and_fetch(&a_int->cnt, n));
 }
 
 /**
@@ -47,7 +48,7 @@ static __inline__ int oro_atomic_sub_and_test(oro_atomic_t *a_int, int n)
  */
 static __inline__ void oro_atomic_inc(oro_atomic_t *a_int)
 {
-    (void)__sync_fetch_and_add(&a_int->cnt, 1);
+  (void)__sync_fetch_and_add(&a_int->cnt, 1);
 }
 
 /**
@@ -55,7 +56,7 @@ static __inline__ void oro_atomic_inc(oro_atomic_t *a_int)
  */
 static __inline__ void oro_atomic_dec(oro_atomic_t *a_int)
 {
-    (void)__sync_fetch_and_sub(&a_int->cnt, 1);
+  (void)__sync_fetch_and_sub(&a_int->cnt, 1);
 }
 
 /**
@@ -63,7 +64,7 @@ static __inline__ void oro_atomic_dec(oro_atomic_t *a_int)
  */
 static __inline__ int oro_atomic_dec_and_test(oro_atomic_t *a_int)
 {
-    return !(__sync_sub_and_fetch(&a_int->cnt, 1));
+  return !(__sync_sub_and_fetch(&a_int->cnt, 1));
 }
 
 /**
@@ -71,7 +72,7 @@ static __inline__ int oro_atomic_dec_and_test(oro_atomic_t *a_int)
  */
 static __inline__ int oro_atomic_inc_and_test(oro_atomic_t *a_int)
 {
-    return !(__sync_add_and_fetch(&a_int->cnt, 1));
+  return !(__sync_add_and_fetch(&a_int->cnt, 1));
 }
 
 /**
@@ -79,6 +80,5 @@ static __inline__ int oro_atomic_inc_and_test(oro_atomic_t *a_int)
  */
 #define oro_cmpxchg(ptr,o,n)\
     ((__typeof__(*(ptr)))__sync_val_compare_and_swap((ptr),(o),(n)))
-
 
 #endif // __GCC_ORO_ARCH__
