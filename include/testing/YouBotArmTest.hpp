@@ -17,25 +17,25 @@ using namespace youbot;
 ///////////////////////////////////////////////////////////////////////////////
 /// A unit test for the youBot arm
 ///////////////////////////////////////////////////////////////////////////////
-class YouBotArmTest : public CppUnit::TestFixture {
-	CPPUNIT_TEST_SUITE(YouBotArmTest);
-	CPPUNIT_TEST(youBotArmTest);
-	CPPUNIT_TEST_SUITE_END();
+class YouBotArmTest : public CppUnit::TestFixture
+{
+CPPUNIT_TEST_SUITE(YouBotArmTest);
+  CPPUNIT_TEST(youBotArmTest);CPPUNIT_TEST_SUITE_END()
+  ;
 
 public:
-	YouBotArmTest();
-	virtual ~YouBotArmTest();
+  YouBotArmTest();
+  virtual ~YouBotArmTest();
 
-	void setUp();
-	void tearDown();
+  void setUp();
+  void tearDown();
 
-
-	void youBotArmTest();
+  void youBotArmTest();
 
 private:
-	unsigned int overallTime;
-	unsigned int startTime;
-	unsigned int updateCycle;
+  unsigned int overallTime;
+  unsigned int startTime;
+  unsigned int updateCycle;
   const int dof;
 };
 

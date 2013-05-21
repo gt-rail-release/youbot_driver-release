@@ -1,7 +1,5 @@
 /*!
-
 @page usage Usage
-
 
 The youBot API give you complete joint level access to the youBot joints. Every youBot joint is represented as a youbot::YouBotJoint class in the API.
 
@@ -13,8 +11,6 @@ Which could be for instance youbot::JointVelocitySetpoint or youbot::JointSensed
 
 To configure parameters of a joint, you have to use the youbot::JointParameter classes.
 Which could be for instance youbot::MaximumPositioningVelocity.
-
-
 
 \section example Example how to use:
 
@@ -129,6 +125,4 @@ To provide a program with raw access to a ethernet device use: (replace the ./Yo
 sudo setcap cap_net_raw+ep ./YouBot_KeyboardRemoteControl
 
 This have to be done whenever the executable is created or replaces e.g. after building.
-
-
 */

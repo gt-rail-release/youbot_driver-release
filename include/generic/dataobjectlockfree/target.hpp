@@ -1,4 +1,3 @@
-
 # if defined( __GNUC__ ) && defined( __i386__ )
 #  define OROBLD_OS_ARCH_i386
 # elif defined( __GNUC__ ) && defined( __x86_64__ )

@@ -49,7 +49,7 @@
  *
  ****************************************************************/
 #include "base-kinematic/WheeledBaseKinematic.hpp" 
-namespace youbot {
-
+namespace youbot
+{
 
 } // namespace youbot

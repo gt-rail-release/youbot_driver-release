@@ -68,30 +68,30 @@
  */
 int ec_setupdatagram(void *frame, uint8 com, uint8 idx, uint16 ADP, uint16 ADO, uint16 length, void *data)
 {
-	ec_comt *datagramP;
-	uint8 *frameP;
+  ec_comt *datagramP;
+  uint8 *frameP;
 
-	frameP = frame;
-	/* Ethernet header is preset and fixed in frame buffers
-	   EtherCAT header needs to be added after that */
-	datagramP = (ec_comt*)&frameP[ETH_HEADERSIZE];
-	datagramP->elength = htoes(EC_ECATTYPE + EC_HEADERSIZE + length);
-	datagramP->command = com;
-	datagramP->index = idx; 
-	datagramP->ADP = htoes(ADP);
-	datagramP->ADO = htoes(ADO);
-	datagramP->dlength = htoes(length); 
-	if (length > 0)
-	{
-		memcpy(&frameP[ETH_HEADERSIZE + EC_HEADERSIZE], data, length);
-	}
-	/* set WKC to zero */
-	frameP[ETH_HEADERSIZE + EC_HEADERSIZE + length] = 0x00;
-	frameP[ETH_HEADERSIZE + EC_HEADERSIZE + length + 1] = 0x00;
-	/* set size of frame in buffer array */
-	ec_txbuflength[idx] = ETH_HEADERSIZE + EC_HEADERSIZE + EC_WKCSIZE + length;
+  frameP = frame;
+  /* Ethernet header is preset and fixed in frame buffers
+   EtherCAT header needs to be added after that */
+  datagramP = (ec_comt*)&frameP[ETH_HEADERSIZE];
+  datagramP->elength = htoes(EC_ECATTYPE + EC_HEADERSIZE + length);
+  datagramP->command = com;
+  datagramP->index = idx;
+  datagramP->ADP = htoes(ADP);
+  datagramP->ADO = htoes(ADO);
+  datagramP->dlength = htoes(length);
+  if (length > 0)
+  {
+    memcpy(&frameP[ETH_HEADERSIZE+ EC_HEADERSIZE], data, length);
+  }
+    /* set WKC to zero */
+  frameP[ETH_HEADERSIZE+ EC_HEADERSIZE + length] = 0x00;
+  frameP[ETH_HEADERSIZE+ EC_HEADERSIZE + length + 1] = 0x00;
+  /* set size of frame in buffer array */
+  ec_txbuflength[idx] = ETH_HEADERSIZE+ EC_HEADERSIZE + EC_WKCSIZE + length;
 
-	return 0;
+  return 0;
 }
 
 /** Add EtherCAT datagram to a standard ethernet frame with existing datagram(s).
@@ -108,74 +108,74 @@ int ec_setupdatagram(void *frame, uint8 com, uint8 idx, uint16 ADP, uint16 ADO, 
  */
 int ec_adddatagram(void *frame, uint8 com, uint8 idx, boolean more, uint16 ADP, uint16 ADO, uint16 length, void *data)
 {
-	ec_comt *datagramP;
-	uint8 *frameP;
-	uint16 prevlength;
+  ec_comt *datagramP;
+  uint8 *frameP;
+  uint16 prevlength;
 
-	frameP = frame;
-	/* copy previous frame size */
-	prevlength = ec_txbuflength[idx]; 
-	datagramP = (ec_comt*)&frameP[ETH_HEADERSIZE];
-	/* add new datagram to ethernet frame size */
-	datagramP->elength = htoes( etohs(datagramP->elength) + EC_HEADERSIZE + length );
-	/* add "datagram follows" flag to previous subframe dlength */
-	datagramP->dlength = htoes( etohs(datagramP->dlength) | EC_DATAGRAMFOLLOWS );
-	/* set new EtherCAT header position */
-	datagramP = (ec_comt*)&frameP[prevlength - EC_ELENGTHSIZE];
-	datagramP->command = com;
-	datagramP->index = idx; 
-	datagramP->ADP = htoes(ADP);
-	datagramP->ADO = htoes(ADO);
-	if (more)
-	{
-		/* this is not the last datagram to add */
-		datagramP->dlength = htoes(length | EC_DATAGRAMFOLLOWS); 
-	}
-	else
-	{
-		/* this is the last datagram in the frame */
-		datagramP->dlength = htoes(length); 
-	}
-	if (length > 0)
-	{
-		memcpy(&frameP[prevlength + EC_HEADERSIZE - EC_ELENGTHSIZE], data, length);
-	}	
-	/* set WKC to zero */
-	frameP[prevlength + EC_HEADERSIZE - EC_ELENGTHSIZE + length] = 0x00;
-	frameP[prevlength + EC_HEADERSIZE - EC_ELENGTHSIZE + length + 1] = 0x00;
-	/* set size of frame in buffer array */
-	ec_txbuflength[idx] = prevlength + EC_HEADERSIZE - EC_ELENGTHSIZE + EC_WKCSIZE + length;
+  frameP = frame;
+  /* copy previous frame size */
+  prevlength = ec_txbuflength[idx];
+  datagramP = (ec_comt*)&frameP[ETH_HEADERSIZE];
+  /* add new datagram to ethernet frame size */
+  datagramP->elength = htoes( etohs(datagramP->elength) + EC_HEADERSIZE + length );
+  /* add "datagram follows" flag to previous subframe dlength */
+  datagramP->dlength = htoes( etohs(datagramP->dlength) | EC_DATAGRAMFOLLOWS );
+  /* set new EtherCAT header position */
+  datagramP = (ec_comt*)&frameP[prevlength - EC_ELENGTHSIZE];
+  datagramP->command = com;
+  datagramP->index = idx;
+  datagramP->ADP = htoes(ADP);
+  datagramP->ADO = htoes(ADO);
+  if (more)
+  {
+    /* this is not the last datagram to add */
+    datagramP->dlength = htoes(length | EC_DATAGRAMFOLLOWS);
+  }
+  else
+  {
+    /* this is the last datagram in the frame */
+    datagramP->dlength = htoes(length);
+  }
+  if (length > 0)
+  {
+    memcpy(&frameP[prevlength + EC_HEADERSIZE- EC_ELENGTHSIZE], data, length);
+  }
+    /* set WKC to zero */
+  frameP[prevlength + EC_HEADERSIZE- EC_ELENGTHSIZE + length] = 0x00;
+  frameP[prevlength + EC_HEADERSIZE- EC_ELENGTHSIZE + length + 1] = 0x00;
+  /* set size of frame in buffer array */
+  ec_txbuflength[idx] = prevlength + EC_HEADERSIZE- EC_ELENGTHSIZE + EC_WKCSIZE + length;
 
-	/* return offset to data in rx frame
-	   14 bytes smaller than tx frame due to stripping of ethernet header */
-	return prevlength + EC_HEADERSIZE - EC_ELENGTHSIZE - ETH_HEADERSIZE;  
+  /* return offset to data in rx frame
+   14 bytes smaller than tx frame due to stripping of ethernet header */
+  return prevlength + EC_HEADERSIZE- EC_ELENGTHSIZE - ETH_HEADERSIZE;
 }
 
-/** BRW "broadcast write" primitive. Blocking.
- *
- * @param[in] ADP			= Address Position, normally 0
- * @param[in] ADO			= Address Offset, slave memory address
- * @param[in] length		= length of databuffer
- * @param[in] data			= databuffer to be written to slaves
- * @param[in] timeout		= timeout in us, standard is EC_TIMEOUTRET
- * @return Workcounter or EC_NOFRAME
- */ 
+  /** BRW "broadcast write" primitive. Blocking.
+   *
+   * @param[in] ADP			= Address Position, normally 0
+   * @param[in] ADO			= Address Offset, slave memory address
+   * @param[in] length		= length of databuffer
+   * @param[in] data			= databuffer to be written to slaves
+   * @param[in] timeout		= timeout in us, standard is EC_TIMEOUTRET
+   * @return Workcounter or EC_NOFRAME
+   */
 int ec_BWR(uint16 ADP, uint16 ADO, uint16 length, void *data, int timeout)
 {
-	uint8 idx;
-	int wkc;
+  uint8 idx;
+  int wkc;
 
-	/* get fresh index */
-	idx = ec_getindex();
-	/* setup datagram */
-	ec_setupdatagram(&ec_txbuf[idx], EC_CMD_BWR, idx, ADP, ADO, length, data);
-	/* send data and wait for answer */
-	wkc = ec_srconfirm (idx, timeout);
-	/* clear buffer status */
-    ec_setbufstat(idx, EC_BUF_EMPTY);
+  /* get fresh index */
+  idx = ec_getindex();
+  /* setup datagram */
+  ec_setupdatagram(&ec_txbuf[idx], EC_CMD_BWR, idx, ADP, ADO, length, data);
+  /* send data and wait for answer */
+  wkc = ec_srconfirm(idx, timeout);
+  /* clear buffer status */
+  ec_setbufstat(idx, EC_BUF_EMPTY);
 
-	return wkc;
-}	
+  return wkc;
+}
 
 /** BRD "broadcast read" primitive. Blocking.
  *
@@ -185,28 +185,28 @@ int ec_BWR(uint16 ADP, uint16 ADO, uint16 length, void *data, int timeout)
  * @param[out] data			= databuffer to put slave data in
  * @param[in] timeout		= timeout in us, standard is EC_TIMEOUTRET
  * @return Workcounter or EC_NOFRAME
- */ 
+ */
 int ec_BRD(uint16 ADP, uint16 ADO, uint16 length, void *data, int timeout)
 {
-	uint8 idx;
-	int wkc;
+  uint8 idx;
+  int wkc;
 
-	/* get fresh index */
-	idx=ec_getindex();
-	/* setup datagram */
-	ec_setupdatagram(&ec_txbuf[idx], EC_CMD_BRD, idx, ADP, ADO, length, data);
-	/* send data and wait for answer */
-	wkc = ec_srconfirm (idx, timeout);
-	if (wkc > 0)
-	{
-		/* copy datagram to data buffer */
-		memcpy(data, &ec_rxbuf[idx][EC_HEADERSIZE], length);
-	}	
-	/* clear buffer status */
-    ec_setbufstat(idx, EC_BUF_EMPTY);
+  /* get fresh index */
+  idx = ec_getindex();
+  /* setup datagram */
+  ec_setupdatagram(&ec_txbuf[idx], EC_CMD_BRD, idx, ADP, ADO, length, data);
+  /* send data and wait for answer */
+  wkc = ec_srconfirm(idx, timeout);
+  if (wkc > 0)
+  {
+    /* copy datagram to data buffer */
+    memcpy(data, &ec_rxbuf[idx][EC_HEADERSIZE], length);
+  }
+    /* clear buffer status */
+  ec_setbufstat(idx, EC_BUF_EMPTY);
 
-	return wkc;
-}	
+  return wkc;
+}
 
 /** APRD "auto increment address read" primitive. Blocking.
  *
@@ -216,22 +216,22 @@ int ec_BRD(uint16 ADP, uint16 ADO, uint16 length, void *data, int timeout)
  * @param[out] data			= databuffer to put slave data in
  * @param[in] timeout		= timeout in us, standard is EC_TIMEOUTRET
  * @return Workcounter or EC_NOFRAME
- */ 
+ */
 int ec_APRD(uint16 ADP, uint16 ADO, uint16 length, void *data, int timeout)
 {
-    int wkc;
-    uint8 idx;
+  int wkc;
+  uint8 idx;
 
-    idx = ec_getindex();
-    ec_setupdatagram(&ec_txbuf[idx], EC_CMD_APRD, idx, ADP, ADO, length, data);
-    wkc = ec_srconfirm(idx, timeout);
-    if (wkc > 0)
-    {
-        memcpy(data, &ec_rxbuf[idx][EC_HEADERSIZE], length);
-    }
-    ec_setbufstat(idx, EC_BUF_EMPTY);
+  idx = ec_getindex();
+  ec_setupdatagram(&ec_txbuf[idx], EC_CMD_APRD, idx, ADP, ADO, length, data);
+  wkc = ec_srconfirm(idx, timeout);
+  if (wkc > 0)
+  {
+    memcpy(data, &ec_rxbuf[idx][EC_HEADERSIZE], length);
+  }
+  ec_setbufstat(idx, EC_BUF_EMPTY);
 
-    return wkc;
+  return wkc;
 }
 
 /** APRMW "auto increment address read, multiple write" primitive. Blocking.
@@ -243,22 +243,22 @@ int ec_APRD(uint16 ADP, uint16 ADO, uint16 length, void *data, int timeout)
  * @param[out] data			= databuffer to put slave data in
  * @param[in] timeout		= timeout in us, standard is EC_TIMEOUTRET
  * @return Workcounter or EC_NOFRAME
- */ 
+ */
 int ec_ARMW(uint16 ADP, uint16 ADO, uint16 length, void *data, int timeout)
 {
-    int wkc;
-    uint8 idx;
+  int wkc;
+  uint8 idx;
 
-    idx = ec_getindex();
-    ec_setupdatagram(&ec_txbuf[idx], EC_CMD_ARMW, idx, ADP, ADO, length, data);
-    wkc = ec_srconfirm(idx, timeout);
-    if (wkc > 0)
-    {
-        memcpy(data, &ec_rxbuf[idx][EC_HEADERSIZE], length);
-    }
-    ec_setbufstat(idx, EC_BUF_EMPTY);
+  idx = ec_getindex();
+  ec_setupdatagram(&ec_txbuf[idx], EC_CMD_ARMW, idx, ADP, ADO, length, data);
+  wkc = ec_srconfirm(idx, timeout);
+  if (wkc > 0)
+  {
+    memcpy(data, &ec_rxbuf[idx][EC_HEADERSIZE], length);
+  }
+  ec_setbufstat(idx, EC_BUF_EMPTY);
 
-    return wkc;
+  return wkc;
 }
 
 /** FPRMW "configured address read, multiple write" primitive. Blocking.
@@ -270,22 +270,22 @@ int ec_ARMW(uint16 ADP, uint16 ADO, uint16 length, void *data, int timeout)
  * @param[out] data			= databuffer to put slave data in
  * @param[in] timeout		= timeout in us, standard is EC_TIMEOUTRET
  * @return Workcounter or EC_NOFRAME
- */ 
+ */
 int ec_FRMW(uint16 ADP, uint16 ADO, uint16 length, void *data, int timeout)
 {
-    int wkc;
-    uint8 idx;
+  int wkc;
+  uint8 idx;
 
-    idx = ec_getindex();
-    ec_setupdatagram(&ec_txbuf[idx],EC_CMD_FRMW, idx, ADP, ADO, length, data);
-    wkc = ec_srconfirm(idx, timeout);
-    if (wkc > 0)
-    {
-        memcpy(data, &ec_rxbuf[idx][EC_HEADERSIZE], length);
-    }
-    ec_setbufstat(idx, EC_BUF_EMPTY);
+  idx = ec_getindex();
+  ec_setupdatagram(&ec_txbuf[idx], EC_CMD_FRMW, idx, ADP, ADO, length, data);
+  wkc = ec_srconfirm(idx, timeout);
+  if (wkc > 0)
+  {
+    memcpy(data, &ec_rxbuf[idx][EC_HEADERSIZE], length);
+  }
+  ec_setbufstat(idx, EC_BUF_EMPTY);
 
-    return wkc;
+  return wkc;
 }
 
 /** APRDw "auto increment address read" word return primitive. Blocking.
@@ -294,15 +294,15 @@ int ec_FRMW(uint16 ADP, uint16 ADO, uint16 length, void *data, int timeout)
  * @param[in] ADO			= Address Offset, slave memory address
  * @param[in] timeout		= timeout in us, standard is EC_TIMEOUTRET
  * @return word data from slave
- */ 
+ */
 uint16 ec_APRDw(uint16 ADP, uint16 ADO, int timeout)
 {
-    uint16 w;
+  uint16 w;
 
-	w = 0;
-    ec_APRD(ADP,ADO, sizeof(w), &w, timeout);
+  w = 0;
+  ec_APRD(ADP, ADO, sizeof(w), &w, timeout);
 
-    return w;
+  return w;
 }
 
 /** FPRD "configured address read" primitive. Blocking.
@@ -313,22 +313,22 @@ uint16 ec_APRDw(uint16 ADP, uint16 ADO, int timeout)
  * @param[out] data			= databuffer to put slave data in
  * @param[in] timeout		= timeout in us, standard is EC_TIMEOUTRET
  * @return Workcounter or EC_NOFRAME
- */ 
+ */
 int ec_FPRD(uint16 ADP, uint16 ADO, uint16 length, void *data, int timeout)
 {
-    int wkc;
-    uint8 idx;
+  int wkc;
+  uint8 idx;
 
-    idx = ec_getindex();
-    ec_setupdatagram(&ec_txbuf[idx], EC_CMD_FPRD, idx, ADP, ADO, length, data);
-    wkc = ec_srconfirm(idx, timeout);
-    if (wkc > 0)
-    {
-        memcpy(data, &ec_rxbuf[idx][EC_HEADERSIZE], length);
-    }
-    ec_setbufstat(idx, EC_BUF_EMPTY);
+  idx = ec_getindex();
+  ec_setupdatagram(&ec_txbuf[idx], EC_CMD_FPRD, idx, ADP, ADO, length, data);
+  wkc = ec_srconfirm(idx, timeout);
+  if (wkc > 0)
+  {
+    memcpy(data, &ec_rxbuf[idx][EC_HEADERSIZE], length);
+  }
+  ec_setbufstat(idx, EC_BUF_EMPTY);
 
-    return wkc;
+  return wkc;
 }
 
 /** FPRDw "configured address read" word return primitive. Blocking.
@@ -337,14 +337,14 @@ int ec_FPRD(uint16 ADP, uint16 ADO, uint16 length, void *data, int timeout)
  * @param[in] ADO			= Address Offset, slave memory address
  * @param[in] timeout		= timeout in us, standard is EC_TIMEOUTRET
  * @return word data from slave
- */ 
+ */
 uint16 ec_FPRDw(uint16 ADP, uint16 ADO, int16 timeout)
 {
-    uint16 w;
+  uint16 w;
 
-	w = 0;
-    ec_FPRD(ADP, ADO, sizeof(w), &w, timeout);
-    return w;
+  w = 0;
+  ec_FPRD(ADP, ADO, sizeof(w), &w, timeout);
+  return w;
 }
 
 /** APWRw "auto increment address write" word primitive. Blocking.
@@ -354,10 +354,10 @@ uint16 ec_FPRDw(uint16 ADP, uint16 ADO, int16 timeout)
  * @param[in] data			= word data to write to slave.
  * @param[in] timeout		= timeout in us, standard is EC_TIMEOUTRET
  * @return Workcounter or EC_NOFRAME
- */ 
+ */
 int ec_APWRw(uint16 ADP, uint16 ADO, uint16 data, int timeout)
 {
-    return ec_APWR(ADP,ADO, sizeof(data), &data, timeout);
+  return ec_APWR(ADP, ADO, sizeof(data), &data, timeout);
 }
 
 /** APWR "auto increment address write" primitive. Blocking.
@@ -368,18 +368,18 @@ int ec_APWRw(uint16 ADP, uint16 ADO, uint16 data, int timeout)
  * @param[in] data			= databuffer to write to slave.
  * @param[in] timeout		= timeout in us, standard is EC_TIMEOUTRET
  * @return Workcounter or EC_NOFRAME
- */ 
+ */
 int ec_APWR(uint16 ADP, uint16 ADO, uint16 length, void *data, int timeout)
 {
-    uint8 idx;
-	int wkc;
+  uint8 idx;
+  int wkc;
 
-    idx = ec_getindex();
-    ec_setupdatagram(&ec_txbuf[idx], EC_CMD_APWR, idx, ADP, ADO, length, data);
-    wkc=ec_srconfirm(idx, timeout);
-    ec_setbufstat(idx, EC_BUF_EMPTY);
-	
-	return wkc;
+  idx = ec_getindex();
+  ec_setupdatagram(&ec_txbuf[idx], EC_CMD_APWR, idx, ADP, ADO, length, data);
+  wkc = ec_srconfirm(idx, timeout);
+  ec_setbufstat(idx, EC_BUF_EMPTY);
+
+  return wkc;
 }
 
 /** FPWR "configured address write" primitive. Blocking.
@@ -389,10 +389,10 @@ int ec_APWR(uint16 ADP, uint16 ADO, uint16 length, void *data, int timeout)
  * @param[in] data			= word to write to slave.
  * @param[in] timeout		= timeout in us, standard is EC_TIMEOUTRET
  * @return Workcounter or EC_NOFRAME
- */ 
+ */
 int ec_FPWRw(uint16 ADP, uint16 ADO, uint16 data, int timeout)
 {
-    return ec_FPWR(ADP,ADO, sizeof(data), &data, timeout);
+  return ec_FPWR(ADP, ADO, sizeof(data), &data, timeout);
 }
 
 /** FPWR "configured address write" primitive. Blocking.
@@ -403,18 +403,18 @@ int ec_FPWRw(uint16 ADP, uint16 ADO, uint16 data, int timeout)
  * @param[in] data			= databuffer to write to slave.
  * @param[in] timeout		= timeout in us, standard is EC_TIMEOUTRET
  * @return Workcounter or EC_NOFRAME
- */ 
+ */
 int ec_FPWR(uint16 ADP, uint16 ADO, uint16 length, void *data, int timeout)
 {
-    int wkc;
-    uint8 idx;
+  int wkc;
+  uint8 idx;
 
-    idx = ec_getindex();
-    ec_setupdatagram(&ec_txbuf[idx], EC_CMD_FPWR, idx, ADP, ADO, length, data);
-    wkc = ec_srconfirm(idx, timeout);
-    ec_setbufstat(idx, EC_BUF_EMPTY);
+  idx = ec_getindex();
+  ec_setupdatagram(&ec_txbuf[idx], EC_CMD_FPWR, idx, ADP, ADO, length, data);
+  wkc = ec_srconfirm(idx, timeout);
+  ec_setbufstat(idx, EC_BUF_EMPTY);
 
-    return wkc;
+  return wkc;
 }
 
 /** LRW "logical memory read / write" primitive. Blocking.
@@ -424,22 +424,22 @@ int ec_FPWR(uint16 ADP, uint16 ADO, uint16 length, void *data, int timeout)
  * @param[in,out] data		= databuffer to write to and read from slave.
  * @param[in] timeout		= timeout in us, standard is EC_TIMEOUTRET
  * @return Workcounter or EC_NOFRAME
- */ 
+ */
 int ec_LRW(uint32 LogAdr, uint16 length, void *data, int timeout)
 {
-    uint8 idx;
-	int wkc;
+  uint8 idx;
+  int wkc;
 
-    idx = ec_getindex();
-    ec_setupdatagram(&ec_txbuf[idx], EC_CMD_LRW, idx, LO_WORD(LogAdr), HI_WORD(LogAdr), length, data);
-    wkc = ec_srconfirm(idx, timeout);
-    if ((wkc > 0) && (ec_rxbuf[idx][EC_CMDOFFSET] == EC_CMD_LRW))
-    {
-        memcpy(data, &ec_rxbuf[idx][EC_HEADERSIZE], length);
-    }
-    ec_setbufstat(idx, EC_BUF_EMPTY);
+  idx = ec_getindex();
+  ec_setupdatagram(&ec_txbuf[idx], EC_CMD_LRW, idx, LO_WORD(LogAdr), HI_WORD(LogAdr), length, data);
+  wkc = ec_srconfirm(idx, timeout);
+  if ((wkc > 0) && (ec_rxbuf[idx][EC_CMDOFFSET] == EC_CMD_LRW))
+  {
+    memcpy(data, &ec_rxbuf[idx][EC_HEADERSIZE], length);
+  }
+  ec_setbufstat(idx, EC_BUF_EMPTY);
 
-    return wkc;
+  return wkc;
 }
 
 /** LRD "logical memory read" primitive. Blocking.
@@ -449,22 +449,22 @@ int ec_LRW(uint32 LogAdr, uint16 length, void *data, int timeout)
  * @param[out] data			= databuffer to read from slave.
  * @param[in] timeout		= timeout in us, standard is EC_TIMEOUTRET
  * @return Workcounter or EC_NOFRAME
- */ 
+ */
 int ec_LRD(uint32 LogAdr, uint16 length, void *data, int timeout)
 {
-    uint8 idx;
-	int wkc;
+  uint8 idx;
+  int wkc;
 
-    idx = ec_getindex();
-    ec_setupdatagram(&ec_txbuf[idx], EC_CMD_LRD, idx, LO_WORD(LogAdr), HI_WORD(LogAdr), length, data);
-    wkc = ec_srconfirm(idx, timeout);
-    if ((wkc > 0) && (ec_rxbuf[idx][EC_CMDOFFSET]==EC_CMD_LRD))
-    {
-        memcpy(data, &ec_rxbuf[idx][EC_HEADERSIZE], length);
-    }
-    ec_setbufstat(idx, EC_BUF_EMPTY);
+  idx = ec_getindex();
+  ec_setupdatagram(&ec_txbuf[idx], EC_CMD_LRD, idx, LO_WORD(LogAdr), HI_WORD(LogAdr), length, data);
+  wkc = ec_srconfirm(idx, timeout);
+  if ((wkc > 0) && (ec_rxbuf[idx][EC_CMDOFFSET]==EC_CMD_LRD))
+  {
+    memcpy(data, &ec_rxbuf[idx][EC_HEADERSIZE], length);
+  }
+  ec_setbufstat(idx, EC_BUF_EMPTY);
 
-    return wkc;
+  return wkc;
 }
 
 /** LWR "logical memory write" primitive. Blocking.
@@ -474,18 +474,18 @@ int ec_LRD(uint32 LogAdr, uint16 length, void *data, int timeout)
  * @param[in] data			= databuffer to write to slave.
  * @param[in] timeout		= timeout in us, standard is EC_TIMEOUTRET
  * @return Workcounter or EC_NOFRAME
- */ 
+ */
 int ec_LWR(uint32 LogAdr, uint16 length, void *data, int timeout)
 {
-    uint8 idx;
-	int wkc;
+  uint8 idx;
+  int wkc;
 
-    idx = ec_getindex();
-    ec_setupdatagram(&ec_txbuf[idx], EC_CMD_LWR, idx, LO_WORD(LogAdr), HI_WORD(LogAdr), length, data);
-    wkc = ec_srconfirm(idx, timeout);
-    ec_setbufstat(idx, EC_BUF_EMPTY);
+  idx = ec_getindex();
+  ec_setupdatagram(&ec_txbuf[idx], EC_CMD_LWR, idx, LO_WORD(LogAdr), HI_WORD(LogAdr), length, data);
+  wkc = ec_srconfirm(idx, timeout);
+  ec_setbufstat(idx, EC_BUF_EMPTY);
 
-    return wkc;
+  return wkc;
 }
 
 /** LRW "logical memory read / write" primitive plus Clock Distribution. Blocking.
@@ -498,29 +498,29 @@ int ec_LWR(uint32 LogAdr, uint16 length, void *data, int timeout)
  * @param[out] DCtime		= DC time read from reference slave.
  * @param[in] timeout		= timeout in us, standard is EC_TIMEOUTRET
  * @return Workcounter or EC_NOFRAME
- */ 
+ */
 int ec_LRWDC(uint32 LogAdr, uint16 length, void *data, uint16 DCrs, int64 *DCtime, int timeout)
 {
-    uint16 DCtO;
-    uint8 idx;
-	int wkc;
-	uint64 DCtE;
+  uint16 DCtO;
+  uint8 idx;
+  int wkc;
+  uint64 DCtE;
 
-    idx = ec_getindex();
-	/* LRW in first datagram */
-    ec_setupdatagram(&ec_txbuf[idx], EC_CMD_LRW, idx, LO_WORD(LogAdr), HI_WORD(LogAdr), length, data);
-	/* FPRMW in second datagram */
-	DCtE = htoell(*DCtime);
-    DCtO = ec_adddatagram(&ec_txbuf[idx], EC_CMD_FRMW, idx, FALSE, DCrs, ECT_REG_DCSYSTIME, sizeof(DCtime), &DCtE);
-    wkc = ec_srconfirm(idx, timeout);
-    if ((wkc > 0) && (ec_rxbuf[idx][EC_CMDOFFSET] == EC_CMD_LRW))
-    {
-        memcpy(data, &ec_rxbuf[idx][EC_HEADERSIZE], length);
-		memcpy(&wkc, &ec_rxbuf[idx][EC_HEADERSIZE + length], EC_WKCSIZE);
-		memcpy(&DCtE, &ec_rxbuf[idx][DCtO], sizeof(*DCtime));
-		*DCtime = etohll(DCtE);
-    }
-    ec_setbufstat(idx, EC_BUF_EMPTY);
+  idx = ec_getindex();
+  /* LRW in first datagram */
+  ec_setupdatagram(&ec_txbuf[idx], EC_CMD_LRW, idx, LO_WORD(LogAdr), HI_WORD(LogAdr), length, data);
+  /* FPRMW in second datagram */
+  DCtE = htoell(*DCtime);
+  DCtO = ec_adddatagram(&ec_txbuf[idx], EC_CMD_FRMW, idx, FALSE, DCrs, ECT_REG_DCSYSTIME, sizeof(DCtime), &DCtE);
+  wkc = ec_srconfirm(idx, timeout);
+  if ((wkc > 0) && (ec_rxbuf[idx][EC_CMDOFFSET] == EC_CMD_LRW))
+  {
+    memcpy(data, &ec_rxbuf[idx][EC_HEADERSIZE], length);
+    memcpy(&wkc, &ec_rxbuf[idx][EC_HEADERSIZE + length], EC_WKCSIZE);
+    memcpy(&DCtE, &ec_rxbuf[idx][DCtO], sizeof(*DCtime));
+    *DCtime = etohll(DCtE);
+  }
+  ec_setbufstat(idx, EC_BUF_EMPTY);
 
-    return wkc;
+  return wkc;
 }

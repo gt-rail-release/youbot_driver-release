@@ -17,25 +17,25 @@ using namespace youbot;
 ///////////////////////////////////////////////////////////////////////////////
 /// A unit test for the youBot gripper
 ///////////////////////////////////////////////////////////////////////////////
-class YouBotGripperTest : public CppUnit::TestFixture {
-	CPPUNIT_TEST_SUITE(YouBotGripperTest);
-	CPPUNIT_TEST(youBotGripperTest);
-	CPPUNIT_TEST_SUITE_END();
+class YouBotGripperTest : public CppUnit::TestFixture
+{
+CPPUNIT_TEST_SUITE(YouBotGripperTest);
+  CPPUNIT_TEST(youBotGripperTest);CPPUNIT_TEST_SUITE_END()
+  ;
 
 public:
-	YouBotGripperTest();
-	virtual ~YouBotGripperTest();
+  YouBotGripperTest();
+  virtual ~YouBotGripperTest();
 
-	void setUp();
-	void tearDown();
+  void setUp();
+  void tearDown();
 
-
-	void youBotGripperTest();
+  void youBotGripperTest();
 
 private:
-	unsigned int overallTime;
-	unsigned int startTime;
-	unsigned int updateCycle;
+  unsigned int overallTime;
+  unsigned int startTime;
+  unsigned int updateCycle;
   const int dof;
 };
 

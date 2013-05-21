@@ -1,11 +1,11 @@
 /***************************************************************************
-  tag: FMTC  Tue Mar 11 21:49:19 CET 2008  oro_atomic.h
+ tag: FMTC  Tue Mar 11 21:49:19 CET 2008  oro_atomic.h
 
-                        oro_atomic.h -  description
-                           -------------------
-    begin                : Tue March 11 2008
-    copyright            : (C) 2008 FMTC
-    email                : peter.soetens@fmtc.be
+ oro_atomic.h -  description
+ -------------------
+ begin                : Tue March 11 2008
+ copyright            : (C) 2008 FMTC
+ email                : peter.soetens@fmtc.be
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -35,7 +35,6 @@
  *                                                                         *
  ***************************************************************************/
 
-
 #ifndef __ARCH_powerpc_ORO_ATOMIC__
 #define __ARCH_powerpc_ORO_ATOMIC__
 
@@ -52,7 +51,6 @@
 extern "C"
 {
 #endif // _cplusplus
-
 #ifdef __SUBARCH_HAS_LWSYNC
 #    define LWSYNC	lwsync
 #else
@@ -64,12 +62,12 @@ extern "C"
 
 static inline void eieio(void)
 {
-	__asm__ __volatile__ ("eieio" : : : "memory");
+  __asm__ __volatile__ ("eieio" : : : "memory");
 }
 
 static inline void isync(void)
 {
-	__asm__ __volatile__ ("isync" : : : "memory");
+  __asm__ __volatile__ ("isync" : : : "memory");
 }
 
 // ==================================================
@@ -114,7 +112,10 @@ static inline void isync(void)
  * PowerPC atomic operations
  */
 
-typedef struct { volatile int counter; } oro_atomic_t;
+typedef struct
+{
+  volatile int counter;
+} oro_atomic_t;
 
 #define ORO_ATOMIC_INIT(i)		{ (i) }
 #define ORO_ATOMIC_SETUP	oro_atomic_set
@@ -123,108 +124,108 @@ typedef struct { volatile int counter; } oro_atomic_t;
 #define oro_atomic_read(v)		((v)->counter)
 #define oro_atomic_set(v,i)		(((v)->counter) = (i))
 
-  static __inline__ void oro_atomic_add(oro_atomic_t *v, int n)
+static __inline__ void oro_atomic_add(oro_atomic_t *v, int n)
 {
-	int t;
+  int t;
 
-	__asm__ __volatile__(
-"1:	lwarx	%0,0,%3		# oro_atomic_add\n\
+  __asm__ __volatile__(
+      "1:	lwarx	%0,0,%3		# oro_atomic_add\n\
 	add	%0,%2,%0\n"
-	PPC405_ERR77(0,%3)
-"	stwcx.	%0,0,%3 \n\
+      PPC405_ERR77(0,%3)
+      "	stwcx.	%0,0,%3 \n\
 	bne-	1b"
-	: "=&r" (t), "=m" (v->counter)
-	: "r" (a), "r" (&v->counter), "m" (v->counter)
-	: "cc");
+      : "=&r" (t), "=m" (v->counter)
+      : "r" (a), "r" (&v->counter), "m" (v->counter)
+      : "cc");
 }
 
-  static __inline__ int oro_atomic_add_return(oro_atomic_t *v, int n)
+static __inline__ int oro_atomic_add_return(oro_atomic_t *v, int n)
 {
-	int t;
+  int t;
 
-	__asm__ __volatile__(
-	LWSYNC_ON_SMP
-"1:	lwarx	%0,0,%2		# oro_atomic_add_return\n\
+  __asm__ __volatile__(
+      LWSYNC_ON_SMP
+      "1:	lwarx	%0,0,%2		# oro_atomic_add_return\n\
 	add	%0,%1,%0\n"
-	PPC405_ERR77(0,%2)
-"	stwcx.	%0,0,%2 \n\
+      PPC405_ERR77(0,%2)
+      "	stwcx.	%0,0,%2 \n\
 	bne-	1b"
-	ISYNC_ON_SMP
-	: "=&r" (t)
-	: "r" (a), "r" (&v->counter)
-	: "cc", "memory");
+      ISYNC_ON_SMP
+      : "=&r" (t)
+      : "r" (a), "r" (&v->counter)
+      : "cc", "memory");
 
-	return t;
+  return t;
 }
 
 #define oro_atomic_add_negative(a, v)	(oro_atomic_add_return((a), (v)) < 0)
 
 static __inline__ void oro_atomic_sub(int a, oro_atomic_t *v)
 {
-	int t;
+  int t;
 
-	__asm__ __volatile__(
-"1:	lwarx	%0,0,%3		# oro_atomic_sub\n\
+  __asm__ __volatile__(
+      "1:	lwarx	%0,0,%3		# oro_atomic_sub\n\
 	subf	%0,%2,%0\n"
-	PPC405_ERR77(0,%3)
-"	stwcx.	%0,0,%3 \n\
+      PPC405_ERR77(0,%3)
+      "	stwcx.	%0,0,%3 \n\
 	bne-	1b"
-	: "=&r" (t), "=m" (v->counter)
-	: "r" (a), "r" (&v->counter), "m" (v->counter)
-	: "cc");
+      : "=&r" (t), "=m" (v->counter)
+      : "r" (a), "r" (&v->counter), "m" (v->counter)
+      : "cc");
 }
 
 static __inline__ int oro_atomic_sub_return(oro_atomic_t *v, int n)
 {
-	int t;
+  int t;
 
-	__asm__ __volatile__(
-	LWSYNC_ON_SMP
-"1:	lwarx	%0,0,%2		# oro_atomic_sub_return\n\
+  __asm__ __volatile__(
+      LWSYNC_ON_SMP
+      "1:	lwarx	%0,0,%2		# oro_atomic_sub_return\n\
 	subf	%0,%1,%0\n"
-	PPC405_ERR77(0,%2)
-"	stwcx.	%0,0,%2 \n\
+      PPC405_ERR77(0,%2)
+      "	stwcx.	%0,0,%2 \n\
 	bne-	1b"
-	ISYNC_ON_SMP
-	: "=&r" (t)
-	: "r" (a), "r" (&v->counter)
-	: "cc", "memory");
+      ISYNC_ON_SMP
+      : "=&r" (t)
+      : "r" (a), "r" (&v->counter)
+      : "cc", "memory");
 
-	return t;
+  return t;
 }
 
 static __inline__ void oro_atomic_inc(oro_atomic_t *v)
 {
-	int t;
+  int t;
 
-	__asm__ __volatile__(
-"1:	lwarx	%0,0,%2		# oro_atomic_inc\n\
+  __asm__ __volatile__(
+      "1:	lwarx	%0,0,%2		# oro_atomic_inc\n\
 	addic	%0,%0,1\n"
-	PPC405_ERR77(0,%2)
-"	stwcx.	%0,0,%2 \n\
+      PPC405_ERR77(0,%2)
+      "	stwcx.	%0,0,%2 \n\
 	bne-	1b"
-	: "=&r" (t), "=m" (v->counter)
-	: "r" (&v->counter), "m" (v->counter)
-	: "cc");
+      : "=&r" (t), "=m" (v->counter)
+      : "r" (&v->counter), "m" (v->counter)
+      : "cc");
 }
 
 static __inline__ int oro_atomic_inc_return(oro_atomic_t *v)
 {
-	int t;
+  int t;
 
-	__asm__ __volatile__(
-	LWSYNC_ON_SMP
-"1:	lwarx	%0,0,%1		# oro_atomic_inc_return\n\
+  __asm__ __volatile__(
+      LWSYNC_ON_SMP
+      "1:	lwarx	%0,0,%1		# oro_atomic_inc_return\n\
 	addic	%0,%0,1\n"
-	PPC405_ERR77(0,%1)
-"	stwcx.	%0,0,%1 \n\
+      PPC405_ERR77(0,%1)
+      "	stwcx.	%0,0,%1 \n\
 	bne-	1b"
-	ISYNC_ON_SMP
-	: "=&r" (t)
-	: "r" (&v->counter)
-	: "cc", "memory");
+      ISYNC_ON_SMP
+      : "=&r" (t)
+      : "r" (&v->counter)
+      : "cc", "memory");
 
-	return t;
+  return t;
 }
 
 /*
@@ -239,36 +240,36 @@ static __inline__ int oro_atomic_inc_return(oro_atomic_t *v)
 
 static __inline__ void oro_atomic_dec(oro_atomic_t *v)
 {
-	int t;
+  int t;
 
-	__asm__ __volatile__(
-"1:	lwarx	%0,0,%2		# oro_atomic_dec\n\
+  __asm__ __volatile__(
+      "1:	lwarx	%0,0,%2		# oro_atomic_dec\n\
 	addic	%0,%0,-1\n"
-	PPC405_ERR77(0,%2)\
+      PPC405_ERR77(0,%2)\
 "	stwcx.	%0,0,%2\n\
 	bne-	1b"
-	: "=&r" (t), "=m" (v->counter)
-	: "r" (&v->counter), "m" (v->counter)
-	: "cc");
+      : "=&r" (t), "=m" (v->counter)
+      : "r" (&v->counter), "m" (v->counter)
+      : "cc");
 }
 
 static __inline__ int oro_atomic_dec_return(oro_atomic_t *v)
 {
-	int t;
+  int t;
 
-	__asm__ __volatile__(
-	LWSYNC_ON_SMP
-"1:	lwarx	%0,0,%1		# oro_atomic_dec_return\n\
+  __asm__ __volatile__(
+      LWSYNC_ON_SMP
+      "1:	lwarx	%0,0,%1		# oro_atomic_dec_return\n\
 	addic	%0,%0,-1\n"
-	PPC405_ERR77(0,%1)
-"	stwcx.	%0,0,%1\n\
+      PPC405_ERR77(0,%1)
+      "	stwcx.	%0,0,%1\n\
 	bne-	1b"
-	ISYNC_ON_SMP
-	: "=&r" (t)
-	: "r" (&v->counter)
-	: "cc", "memory");
+      ISYNC_ON_SMP
+      : "=&r" (t)
+      : "r" (&v->counter)
+      : "cc", "memory");
 
-	return t;
+  return t;
 }
 
 #define oro_atomic_oro_cmpxchg(v, o, n) ((int)oro_cmpxchg(&((v)->counter), (o), (n)))
@@ -308,23 +309,23 @@ static __inline__ int oro_atomic_dec_return(oro_atomic_t *v)
  */
 static __inline__ int oro_atomic_dec_if_positive(oro_atomic_t *v)
 {
-	int t;
+  int t;
 
-	__asm__ __volatile__(
-	LWSYNC_ON_SMP
-"1:	lwarx	%0,0,%1		# oro_atomic_dec_if_positive\n\
+  __asm__ __volatile__(
+      LWSYNC_ON_SMP
+      "1:	lwarx	%0,0,%1		# oro_atomic_dec_if_positive\n\
 	addic.	%0,%0,-1\n\
 	blt-	2f\n"
-	PPC405_ERR77(0,%1)
-"	stwcx.	%0,0,%1\n\
+      PPC405_ERR77(0,%1)
+      "	stwcx.	%0,0,%1\n\
 	bne-	1b"
-	ISYNC_ON_SMP
-	"\n\
-2:"	: "=&r" (t)
-	: "r" (&v->counter)
-	: "cc", "memory");
+      ISYNC_ON_SMP
+      "\n\
+2:" : "=&r" (t)
+      : "r" (&v->counter)
+      : "cc", "memory");
 
-	return t;
+  return t;
 }
 
 #define smp_mb__before_oro_atomic_dec()     smp_mb()
@@ -337,6 +338,4 @@ static __inline__ int oro_atomic_dec_if_positive(oro_atomic_t *v)
 #ifdef _cplusplus
 } // end extern "C"
 #endif // _cplusplus
-
 #endif // __ARCH_powerpc_ORO_ATOMIC__
-
