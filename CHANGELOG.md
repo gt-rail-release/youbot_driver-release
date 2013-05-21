@@ -1,5 +1,11 @@
 DEVEL - **0.1.x**
+
+2013-05-21 - **0.1.5**
+ * Patch in postint script [(rctoris)](https://github.com/rctoris/)
+
+2013-05-21 - **0.1.4**
  * Code cleanup (ROS formatting) [(rctoris)](https://github.com/rctoris/)
+ * LD path configured with debian [(rctoris)](https://github.com/rctoris/)
  * youbot_driver default config fix added [(andywolff)](https://github.com/andywolff/), [(adamjardim)](https://github.com/adamjardim/)
 
 2013-05-20 - **0.1.3**
