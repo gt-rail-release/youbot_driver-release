@@ -55,20 +55,22 @@
  * License LGPL and BSD license along with this program.
  *
  ****************************************************************/
-namespace youbot {
+namespace youbot
+{
 
 ///////////////////////////////////////////////////////////////////////////////
 /// abstract gripper with one degree of freedom
 ///////////////////////////////////////////////////////////////////////////////
-class OneDOFGripper : public Gripper {
-  public:
-    virtual void setConfigurationParameter(const GripperParameter& parameter) = 0;
+class OneDOFGripper : public Gripper
+{
+public:
+  virtual void setConfigurationParameter(const GripperParameter& parameter) = 0;
 
-    virtual void getConfigurationParameter(GripperParameter& parameter) const = 0;
+  virtual void getConfigurationParameter(GripperParameter& parameter) const = 0;
 
-    virtual void setData(const OneDOFGripperData& data) = 0;
+  virtual void setData(const OneDOFGripperData& data) = 0;
 
-    virtual void getData(OneDOFGripperData& data) const = 0;
+  virtual void getData(OneDOFGripperData& data) const = 0;
 
 };
 

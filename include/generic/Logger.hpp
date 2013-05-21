@@ -57,48 +57,45 @@
 #include "boost/date_time/posix_time/posix_time.hpp"
 
 #ifdef USE_ROS_LOGGING
-	#include <ros/ros.h>
+#include <ros/ros.h>
 #endif
 
-namespace youbot {
+namespace youbot
+{
 
-    enum severity_level {
-        trace,
-        debug,
-        info,
-        warning,
-        error,
-        fatal
-    };
-    
-    ///////////////////////////////////////////////////////////////////////////////
-    /// Implementation logging to console and to a file
-    ///////////////////////////////////////////////////////////////////////////////
-    class Logger {
-    private:
-        std::stringstream out;
-        bool print;
-        severity_level level;
-    public:
+enum severity_level
+{
+  trace, debug, info, warning, error, fatal
+};
 
-        Logger(const std::string &funcName, const int &lineNo, const std::string &fileName, severity_level level);
-        ~Logger();
-        
-        static bool toConsole;
-        static bool toFile;
-        static bool toROS;
-        static severity_level logginLevel;
+///////////////////////////////////////////////////////////////////////////////
+/// Implementation logging to console and to a file
+///////////////////////////////////////////////////////////////////////////////
+class Logger
+{
+private:
+  std::stringstream out;
+  bool print;
+  severity_level level;
+public:
 
-        template <class T>
-        Logger & operator<<(const T &v) {
-            out << v;
-            return *this;
-        }
-    };
+  Logger(const std::string &funcName, const int &lineNo, const std::string &fileName, severity_level level);
+  ~Logger();
 
+  static bool toConsole;
+  static bool toFile;
+  static bool toROS;
+  static severity_level logginLevel;
+
+  template<class T>
+    Logger & operator<<(const T &v)
+    {
+      out << v;
+      return *this;
+    }
+};
 
 #define LOG(level) Logger(__PRETTY_FUNCTION__, __LINE__ , __FILE__, level)
-
 
 } // namespace youbot
 

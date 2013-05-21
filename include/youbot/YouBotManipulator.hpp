@@ -67,106 +67,107 @@
 #include "youbot/EthercatMasterWithoutThread.hpp"
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/scoped_ptr.hpp>
-namespace youbot {
+namespace youbot
+{
 
 /// The number of manipulator joints
 #define ARMJOINTS 5
 ///////////////////////////////////////////////////////////////////////////////
 /// It groups the manipulator joints and the gripper together
 ///////////////////////////////////////////////////////////////////////////////
-class YouBotManipulator {
-  public:
-    YouBotManipulator(const std::string name, const std::string configFilePath);
+class YouBotManipulator
+{
+public:
+  YouBotManipulator(const std::string name, const std::string configFilePath);
 
-    virtual ~YouBotManipulator();
+  virtual ~YouBotManipulator();
 
-    ///does the sine commutation of the arm joints
-    void doJointCommutation();
+  ///does the sine commutation of the arm joints
+  void doJointCommutation();
 
-    ///calibrate the reference position of the arm joints
-    void calibrateManipulator(const bool forceCalibration = false);
+  ///calibrate the reference position of the arm joints
+  void calibrateManipulator(const bool forceCalibration = false);
 
-    void calibrateGripper(const bool forceCalibration = false);
+  void calibrateGripper(const bool forceCalibration = false);
 
-    ///return a joint form the arm1
-    ///@param armJointNumber 1-5 for the arm joints
-    YouBotJoint& getArmJoint(const unsigned int armJointNumber);
+  ///return a joint form the arm1
+  ///@param armJointNumber 1-5 for the arm joints
+  YouBotJoint& getArmJoint(const unsigned int armJointNumber);
 
-    YouBotGripper& getArmGripper();
+  YouBotGripper& getArmGripper();
 
-    ///commands positions or angles to all manipulator joints
-    ///all positions will be set at the same time
-    ///@param JointData the to command positions
-    virtual void setJointData(const std::vector<JointAngleSetpoint>& JointData);
+  ///commands positions or angles to all manipulator joints
+  ///all positions will be set at the same time
+  ///@param JointData the to command positions
+  virtual void setJointData(const std::vector<JointAngleSetpoint>& JointData);
 
-    ///gets the position or angle of all manipulator joints which have been calculated from the actual encoder value
-    ///These values are all read at the same time from the different joints 
-    ///@param data returns the angles by reference
-    virtual void getJointData(std::vector<JointSensedAngle>& data);
+  ///gets the position or angle of all manipulator joints which have been calculated from the actual encoder value
+  ///These values are all read at the same time from the different joints
+  ///@param data returns the angles by reference
+  virtual void getJointData(std::vector<JointSensedAngle>& data);
 
-    ///commands velocities to all manipulator joints
-    ///all velocities will be set at the same time
-    ///@param JointData the to command velocities
-    virtual void setJointData(const std::vector<JointVelocitySetpoint>& JointData);
+  ///commands velocities to all manipulator joints
+  ///all velocities will be set at the same time
+  ///@param JointData the to command velocities
+  virtual void setJointData(const std::vector<JointVelocitySetpoint>& JointData);
 
-    ///gets the velocities of all manipulator joints which have been calculated from the actual encoder values
-    ///These values are all read at the same time from the different joints 
-    ///@param data returns the velocities by reference
-    virtual void getJointData(std::vector<JointSensedVelocity>& data);
+  ///gets the velocities of all manipulator joints which have been calculated from the actual encoder values
+  ///These values are all read at the same time from the different joints
+  ///@param data returns the velocities by reference
+  virtual void getJointData(std::vector<JointSensedVelocity>& data);
 
-    ///commands current to all manipulator joints
-    ///all current values will be set at the same time
-    ///@param JointData the to command current
-    virtual void setJointData(const std::vector<JointCurrentSetpoint>& JointData);
+  ///commands current to all manipulator joints
+  ///all current values will be set at the same time
+  ///@param JointData the to command current
+  virtual void setJointData(const std::vector<JointCurrentSetpoint>& JointData);
 
-    ///gets the motor currents of all manipulator joints which have been measured by a hal sensor
-    ///These values are all read at the same time from the different joints 
-    ///@param data returns the actual motor currents by reference
-    virtual void getJointData(std::vector<JointSensedCurrent>& data);
+  ///gets the motor currents of all manipulator joints which have been measured by a hal sensor
+  ///These values are all read at the same time from the different joints
+  ///@param data returns the actual motor currents by reference
+  virtual void getJointData(std::vector<JointSensedCurrent>& data);
 
-    ///commands torque to all manipulator joints
-    ///all torque values will be set at the same time
-    ///@param JointData the to command torque 
-    virtual void setJointData(const std::vector<JointTorqueSetpoint>& JointData);
+  ///commands torque to all manipulator joints
+  ///all torque values will be set at the same time
+  ///@param JointData the to command torque
+  virtual void setJointData(const std::vector<JointTorqueSetpoint>& JointData);
 
-    ///gets the joint torque of all manipulator joints which have been calculated from the current
-    ///These values are all read at the same time from the different joints 
-    ///@param data returns the actual joint torque by reference
-    virtual void getJointData(std::vector<JointSensedTorque>& data);
+  ///gets the joint torque of all manipulator joints which have been calculated from the current
+  ///These values are all read at the same time from the different joints
+  ///@param data returns the actual joint torque by reference
+  virtual void getJointData(std::vector<JointSensedTorque>& data);
 
+private:
+  YouBotManipulator(const YouBotManipulator & source);
 
-  private:
-    YouBotManipulator(const YouBotManipulator & source);
+  YouBotManipulator & operator=(const YouBotManipulator & source);
 
-    YouBotManipulator & operator=(const YouBotManipulator & source);
+  ///does the commutation of the arm joints with firmware 2.0
+  void commutationFirmware200();
 
-    ///does the commutation of the arm joints with firmware 2.0
-    void commutationFirmware200();
+  ///does the commutation of the arm joints with firmware 1.48 and below
+  void commutationFirmware148();
 
-    ///does the commutation of the arm joints with firmware 1.48 and below
-    void commutationFirmware148();
+  void initializeJoints();
 
-    void initializeJoints();
+  boost::scoped_ptr<ConfigFile> configfile;
 
-    boost::scoped_ptr<ConfigFile> configfile;
+  boost::ptr_vector<YouBotJoint> joints;
 
-    boost::ptr_vector<YouBotJoint> joints;
+  boost::scoped_ptr<YouBotGripper> gripper;
 
-    boost::scoped_ptr<YouBotGripper> gripper;
+  int controllerType;
 
-    int controllerType;
+  EthercatMasterInterface& ethercatMaster;
 
-    EthercatMasterInterface& ethercatMaster;
+  bool useGripper;
 
-    bool useGripper;
+  EthercatMasterWithThread* ethercatMasterWithThread;
 
-    EthercatMasterWithThread* ethercatMasterWithThread;
+  int alternativeControllerType;
 
-    int alternativeControllerType;
+  std::vector<std::string> supportedFirmwareVersions;
 
-    std::vector<std::string> supportedFirmwareVersions;
-
-    std::string actualFirmwareVersionAllJoints;
+  std::string actualFirmwareVersionAllJoints;
 
 };
 

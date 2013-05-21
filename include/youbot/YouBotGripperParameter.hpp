@@ -62,509 +62,610 @@
 #include "youbot/ProtocolDefinitions.hpp"
 #include "youbot/YouBotSlaveMsg.hpp"
 #include "youbot/YouBotSlaveMailboxMsg.hpp"
-namespace youbot {
+namespace youbot
+{
 
 ///////////////////////////////////////////////////////////////////////////////
 /// abstract youBot gripper parameter
 ///////////////////////////////////////////////////////////////////////////////
-class YouBotGripperParameter : public GripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  protected:
-    YouBotGripperParameter();
+class YouBotGripperParameter : public GripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+protected:
+  YouBotGripperParameter();
 
+public:
+  virtual ~YouBotGripperParameter();
 
-  public:
-    virtual ~YouBotGripperParameter();
+  virtual void toString(std::string& value) const = 0;
 
-    virtual void toString(std::string& value) const = 0;
+protected:
+  virtual ParameterType getType() const = 0;
 
+  virtual std::string getName() const = 0;
 
-  protected:
-    virtual ParameterType getType() const = 0;
+  virtual void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const = 0;
 
-    virtual std::string getName() const = 0;
+  virtual void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message) = 0;
 
-    virtual void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const = 0;
+  std::string name;
 
-    virtual void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message) = 0;
-
-    std::string name;
-
-
-  private:
-    ParameterType parameterType;
+private:
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// the firmware version of the gripper
 ///////////////////////////////////////////////////////////////////////////////
-class GripperFirmwareVersion : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    GripperFirmwareVersion();
+class GripperFirmwareVersion : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  GripperFirmwareVersion();
 
-    virtual ~GripperFirmwareVersion();
+  virtual ~GripperFirmwareVersion();
 
-    void getParameter(int& controllerType, double& firmwareVersion) const;
+  void getParameter(int& controllerType, double& firmwareVersion) const;
 
-    void setParameter(const int controllerType, const double firmwareVersion);
+  void setParameter(const int controllerType, const double firmwareVersion);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int controllerType;
 
-    int controllerType;
+  double firmwareVersion;
 
-    double firmwareVersion;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// The name for a gripper bar or finger
 ///////////////////////////////////////////////////////////////////////////////
-class GripperBarName : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
+class GripperBarName : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
 
+public:
+  GripperBarName();
 
-  public:
-    GripperBarName();
+  virtual ~GripperBarName();
 
-    virtual ~GripperBarName();
+  void getParameter(std::string& parameter) const;
 
-    void getParameter(std::string& parameter) const;
+  void setParameter(const std::string parameter);
 
-    void setParameter(const std::string parameter);
+  void toString(std::string& value) const;
 
-    void toString(std::string& value) const;
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  std::string value;
 
-    ParameterType getType() const {return this->parameterType;};
+  std::string name;
 
-    std::string value;
-
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Calibrate the gripper
 ///////////////////////////////////////////////////////////////////////////////
-class CalibrateGripper : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    CalibrateGripper();
+class CalibrateGripper : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  CalibrateGripper();
 
-    virtual ~CalibrateGripper();
+  virtual ~CalibrateGripper();
 
-    void getParameter(bool& parameter) const;
+  void getParameter(bool& parameter) const;
 
-    void setParameter(const bool parameter);
+  void setParameter(const bool parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  virtual void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    virtual void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  virtual void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    virtual void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  bool value;
 
-    bool value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Represents a bar spacing offset. It could be useful if the gripper can not be totally closed.
 ///////////////////////////////////////////////////////////////////////////////
-class BarSpacingOffset : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    BarSpacingOffset();
+class BarSpacingOffset : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  BarSpacingOffset();
 
-    virtual ~BarSpacingOffset();
+  virtual ~BarSpacingOffset();
 
-    void getParameter(quantity<si::length>& parameter) const;
+  void getParameter(quantity<si::length>& parameter) const;
 
-    void setParameter(const quantity<si::length>& parameter);
+  void setParameter(const quantity<si::length>& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  virtual void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    virtual void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  virtual void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    virtual void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  quantity<si::length> value;
 
-    quantity<si::length> value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// The encoder value when the gripper has reached it's maximum bar spacing position
 ///////////////////////////////////////////////////////////////////////////////
-class MaxEncoderValue : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    MaxEncoderValue();
+class MaxEncoderValue : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  MaxEncoderValue();
 
-    virtual ~MaxEncoderValue();
+  virtual ~MaxEncoderValue();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int parameter);
+  void setParameter(const unsigned int parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  virtual void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    virtual void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  virtual void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    virtual void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// The maximum bar spacing distance of the gripper
 ///////////////////////////////////////////////////////////////////////////////
-class MaxTravelDistance : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    MaxTravelDistance();
+class MaxTravelDistance : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  MaxTravelDistance();
 
-    virtual ~MaxTravelDistance();
+  virtual ~MaxTravelDistance();
 
-    void getParameter(quantity<si::length>& parameter) const;
+  void getParameter(quantity<si::length>& parameter) const;
 
-    void setParameter(const quantity<si::length>& parameter);
+  void setParameter(const quantity<si::length>& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  virtual void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    virtual void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  virtual void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    virtual void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  quantity<si::length> value;
 
-    quantity<si::length> value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Actual position of one gripper bar
 ///////////////////////////////////////////////////////////////////////////////
-class ActualPosition : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    ActualPosition();
+class ActualPosition : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  ActualPosition();
 
-    virtual ~ActualPosition();
+  virtual ~ActualPosition();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Position setpoint for one gripper bar
 ///////////////////////////////////////////////////////////////////////////////
-class PositionSetpoint : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    PositionSetpoint();
+class PositionSetpoint : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  PositionSetpoint();
 
-    virtual ~PositionSetpoint();
+  virtual ~PositionSetpoint();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Indicates that the actual position equals the target position. 
 ///////////////////////////////////////////////////////////////////////////////
-class TargetPositionReached : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    TargetPositionReached();
+class TargetPositionReached : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  TargetPositionReached();
 
-    virtual ~TargetPositionReached();
+  virtual ~TargetPositionReached();
 
-    void getParameter(bool& parameter) const;
+  void getParameter(bool& parameter) const;
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  bool value;
 
-    bool value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Actual velocity of one gripper bar
 ///////////////////////////////////////////////////////////////////////////////
-class ActualVelocity : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    ActualVelocity();
+class ActualVelocity : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  ActualVelocity();
 
-    virtual ~ActualVelocity();
+  virtual ~ActualVelocity();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Velocity setpoint for one gripper bar
 ///////////////////////////////////////////////////////////////////////////////
-class VelocitySetpoint : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    VelocitySetpoint();
+class VelocitySetpoint : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  VelocitySetpoint();
 
-    virtual ~VelocitySetpoint();
+  virtual ~VelocitySetpoint();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Readout of the actual load value with used for stall detection (stallGuard2).
 
-
 ///////////////////////////////////////////////////////////////////////////////
-class ActualLoadValue : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    ActualLoadValue();
+class ActualLoadValue : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  ActualLoadValue();
 
-    virtual ~ActualLoadValue();
+  virtual ~ActualLoadValue();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Selects the comparator blank time. This time needs to safely cover the switching event and the duration of the ringing on the sense resistor. For low current drivers, a setting of 1 or 2 is good.
 
 ///////////////////////////////////////////////////////////////////////////////
-class ChopperBlankTime : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    ChopperBlankTime();
+class ChopperBlankTime : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  ChopperBlankTime();
 
-    virtual ~ChopperBlankTime();
+  virtual ~ChopperBlankTime();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -573,39 +674,47 @@ friend class YouBotGripperBar;
 /// 3   very slow decrement
 
 ///////////////////////////////////////////////////////////////////////////////
-class ChopperHysteresisDecrement : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    ChopperHysteresisDecrement();
+class ChopperHysteresisDecrement : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  ChopperHysteresisDecrement();
 
-    virtual ~ChopperHysteresisDecrement();
+  virtual ~ChopperHysteresisDecrement();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -614,77 +723,93 @@ friend class YouBotGripperBar;
 ///  0   zero hysteresis end setting
 ///  1... 12 positive hysteresis end setting
 ///////////////////////////////////////////////////////////////////////////////
-class ChopperHysteresisEnd : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    ChopperHysteresisEnd();
+class ChopperHysteresisEnd : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  ChopperHysteresisEnd();
 
-    virtual ~ChopperHysteresisEnd();
+  virtual ~ChopperHysteresisEnd();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 ///  Hysteresis start setting. Please remark, that this  value is an offset to the hysteresis end value.
 ///////////////////////////////////////////////////////////////////////////////
-class ChopperHysteresisStart : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    ChopperHysteresisStart();
+class ChopperHysteresisStart : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  ChopperHysteresisStart();
 
-    virtual ~ChopperHysteresisStart();
+  virtual ~ChopperHysteresisStart();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -693,35 +818,43 @@ friend class YouBotGripperBar;
 /// 1   classic const. off time
 
 ///////////////////////////////////////////////////////////////////////////////
-class ChopperMode : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    ChopperMode();
+class ChopperMode : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  ChopperMode();
 
-    virtual ~ChopperMode();
+  virtual ~ChopperMode();
 
-    void getParameter(bool& parameter) const;
+  void getParameter(bool& parameter) const;
 
-    void setParameter(const bool parameter);
+  void setParameter(const bool parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  bool value;
 
-    bool value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -731,39 +864,47 @@ friend class YouBotGripperBar;
 //// Setting this parameter to zero completely disables all driver transistors and the motor can free-wheel.
 
 ///////////////////////////////////////////////////////////////////////////////
-class ChopperOffTime : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    ChopperOffTime();
+class ChopperOffTime : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  ChopperOffTime();
 
-    virtual ~ChopperOffTime();
+  virtual ~ChopperOffTime();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -772,37 +913,44 @@ friend class YouBotGripperBar;
 /// 1   double step on
 
 ///////////////////////////////////////////////////////////////////////////////
-class DoubleStepEnable : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
+class DoubleStepEnable : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
 
+public:
+  DoubleStepEnable();
 
-  public:
-    DoubleStepEnable();
+  virtual ~DoubleStepEnable();
 
-    virtual ~DoubleStepEnable();
+  void getParameter(bool& parameter) const;
 
-    void getParameter(bool& parameter) const;
+  void setParameter(const bool parameter);
 
-    void setParameter(const bool parameter);
+  void toString(std::string& value) const;
 
-    void toString(std::string& value) const;
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  bool value;
 
-    ParameterType getType() const {return this->parameterType;};
+  std::string name;
 
-    bool value;
-
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -823,39 +971,47 @@ friend class YouBotGripperBar;
 /// Bit 7: Stand still
 /// (1: No step impulse occurred on the step input during the last 2^20 clock cycles)
 ///////////////////////////////////////////////////////////////////////////////
-class ErrorFlags : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    ErrorFlags();
+class ErrorFlags : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  ErrorFlags();
 
-    virtual ~ErrorFlags();
+  virtual ~ErrorFlags();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -864,156 +1020,187 @@ friend class YouBotGripperBar;
 /// 0 = never
 /// [msec]
 
-
 ///////////////////////////////////////////////////////////////////////////////
-class Freewheeling : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    Freewheeling();
+class Freewheeling : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  Freewheeling();
 
-    virtual ~Freewheeling();
+  virtual ~Freewheeling();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Acceleration parameter for velocity control and position control
 ///////////////////////////////////////////////////////////////////////////////
-class MaximumAcceleration : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    MaximumAcceleration();
+class MaximumAcceleration : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  MaximumAcceleration();
 
-    virtual ~MaximumAcceleration();
+  virtual ~MaximumAcceleration();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// The most important motor setting, since too high values might cause motor damage! The maximum value is 255. This value means 100% of the maximum current of the module. The current adjustment is within the range 0... 255 and can be adjusted in 32 steps (0... 255 divided by eight; e.g. step 0 = 0... 7, step 1 = 8... 15 and so on).
 
 ///////////////////////////////////////////////////////////////////////////////
-class MaximumCurrent : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    MaximumCurrent();
+class MaximumCurrent : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  MaximumCurrent();
 
-    virtual ~MaximumCurrent();
+  virtual ~MaximumCurrent();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// The limit for acceleration (and deceleration). Changing this parameter requires re-calculation of the acceleration factor (no. 146) and the acceleration divisor (no. 137), which is done automatically.
 ///////////////////////////////////////////////////////////////////////////////
-class MaximumPositioningSpeed : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    MaximumPositioningSpeed();
+class MaximumPositioningSpeed : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  MaximumPositioningSpeed();
 
-    virtual ~MaximumPositioningSpeed();
+  virtual ~MaximumPositioningSpeed();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -1027,157 +1214,188 @@ friend class YouBotGripperBar;
 /// 7: 128 microsteps
 /// 8: 256 microsteps
 ///////////////////////////////////////////////////////////////////////////////
-class MicrostepResolution : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
+class MicrostepResolution : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
 
-  public:
-    MicrostepResolution();
+public:
+  MicrostepResolution();
 
-    virtual ~MicrostepResolution();
+  virtual ~MicrostepResolution();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Standstill period before the current is changed down to standby current. The standard value is 200 (value equates 2000msec).
 ///////////////////////////////////////////////////////////////////////////////
-class PowerDownDelay : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    PowerDownDelay();
+class PowerDownDelay : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  PowerDownDelay();
 
-    virtual ~PowerDownDelay();
+  virtual ~PowerDownDelay();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// The exponent of the scaling factor for the pulse (step) generator   should be de/incremented carefully (in steps of one).
 ///////////////////////////////////////////////////////////////////////////////
-class PulseDivisor : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
+class PulseDivisor : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
 
+public:
+  PulseDivisor();
 
-  public:
-    PulseDivisor();
+  virtual ~PulseDivisor();
 
-    virtual ~PulseDivisor();
+  void getParameter(unsigned int& parameter) const;
 
-    void getParameter(unsigned int& parameter) const;
+  void setParameter(const unsigned int& parameter);
 
-    void setParameter(const unsigned int& parameter);
+  void toString(std::string& value) const;
 
-    void toString(std::string& value) const;
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  unsigned int upperLimit;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int lowerLimit;
 
-    unsigned int upperLimit;
+  unsigned int value;
 
-    unsigned int lowerLimit;
+  std::string name;
 
-    unsigned int value;
-
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// The exponent of the scaling factor for the ramp generator- should be de/incremented carefully (in steps of one).
 ///////////////////////////////////////////////////////////////////////////////
-class RampDivisor : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
+class RampDivisor : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
 
-  public:
-    RampDivisor();
+public:
+  RampDivisor();
 
-    virtual ~RampDivisor();
+  virtual ~RampDivisor();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -1185,40 +1403,48 @@ friend class YouBotGripperBar;
 /// 0: position mode. Steps are generated, when the parameters actual position and target position differ. Trapezoidal speed ramps are provided.
 /// 2: velocity mode. The motor will run continuously and the speed will be changed with constant (maximum) acceleration, if the parameter target speed is changed. For special purposes, the soft mode (value 1) with exponential decrease of speed can be selected.
 ///////////////////////////////////////////////////////////////////////////////
-class RampMode : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
+class RampMode : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
 
-  public:
-    RampMode();
+public:
+  RampMode();
 
-    virtual ~RampMode();
+  virtual ~RampMode();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -1228,41 +1454,48 @@ friend class YouBotGripperBar;
 /// 3: 0.8 s
 /// Use default value!
 
-
 ///////////////////////////////////////////////////////////////////////////////
-class ShortDetectionTimer : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    ShortDetectionTimer();
+class ShortDetectionTimer : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  ShortDetectionTimer();
 
-    virtual ~ShortDetectionTimer();
+  virtual ~ShortDetectionTimer();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -1271,35 +1504,43 @@ friend class YouBotGripperBar;
 /// Use default value!
 
 ///////////////////////////////////////////////////////////////////////////////
-class ShortProtectionDisable : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    ShortProtectionDisable();
+class ShortProtectionDisable : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  ShortProtectionDisable();
 
-    virtual ~ShortProtectionDisable();
+  virtual ~ShortProtectionDisable();
 
-    void getParameter(bool& parameter) const;
+  void getParameter(bool& parameter) const;
 
-    void setParameter(const bool parameter);
+  void setParameter(const bool parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  bool value;
 
-    bool value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -1308,78 +1549,94 @@ friend class YouBotGripperBar;
 /// 3: fastest slope
 
 ///////////////////////////////////////////////////////////////////////////////
-class SlopeControlHighSide : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    SlopeControlHighSide();
+class SlopeControlHighSide : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  SlopeControlHighSide();
 
-    virtual ~SlopeControlHighSide();
+  virtual ~SlopeControlHighSide();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Determines the slope of the motor driver outputs. Set identical to slope control high side.
 
 ///////////////////////////////////////////////////////////////////////////////
-class SlopeControlLowSide : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    SlopeControlLowSide();
+class SlopeControlLowSide : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  SlopeControlLowSide();
 
-    virtual ~SlopeControlLowSide();
+  virtual ~SlopeControlLowSide();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -1387,41 +1644,48 @@ friend class YouBotGripperBar;
 /// actual motor current scaling factor:
 /// 0 ... 31: 1/32, 2/32, ... 32/32
 
-
 ///////////////////////////////////////////////////////////////////////////////
-class SmartEnergyActualCurrent : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    SmartEnergyActualCurrent();
+class SmartEnergyActualCurrent : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  SmartEnergyActualCurrent();
 
-    virtual ~SmartEnergyActualCurrent();
+  virtual ~SmartEnergyActualCurrent();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -1431,39 +1695,47 @@ friend class YouBotGripperBar;
 /// 0: slow decrement
 /// 3: fast decrement
 ///////////////////////////////////////////////////////////////////////////////
-class SmartEnergyCurrentDownStep : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    SmartEnergyCurrentDownStep();
+class SmartEnergyCurrentDownStep : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  SmartEnergyCurrentDownStep();
 
-    virtual ~SmartEnergyCurrentDownStep();
+  virtual ~SmartEnergyCurrentDownStep();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -1472,39 +1744,47 @@ friend class YouBotGripperBar;
 /// 0   1/2 of CS
 /// 1   1/4 of CS
 ///////////////////////////////////////////////////////////////////////////////
-class SmartEnergyCurrentMinimum : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    SmartEnergyCurrentMinimum();
+class SmartEnergyCurrentMinimum : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  SmartEnergyCurrentMinimum();
 
-    virtual ~SmartEnergyCurrentMinimum();
+  virtual ~SmartEnergyCurrentMinimum();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -1514,39 +1794,47 @@ friend class YouBotGripperBar;
 /// 3: fast increment / fast reaction to rising load
 
 ///////////////////////////////////////////////////////////////////////////////
-class SmartEnergyCurrentUpStep : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    SmartEnergyCurrentUpStep();
+class SmartEnergyCurrentUpStep : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  SmartEnergyCurrentUpStep();
 
-    virtual ~SmartEnergyCurrentUpStep();
+  virtual ~SmartEnergyCurrentUpStep();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -1554,156 +1842,188 @@ friend class YouBotGripperBar;
 /// Hysteresis: (smartEnergy hysteresis value + 1) * 32
 /// Upper stallGuard2 threshold: (smartEnergy hysteresis start + smartEnergy hysteresis + 1) * 32
 ///////////////////////////////////////////////////////////////////////////////
-class SmartEnergyHysteresis : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    SmartEnergyHysteresis();
+class SmartEnergyHysteresis : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  SmartEnergyHysteresis();
 
-    virtual ~SmartEnergyHysteresis();
+  virtual ~SmartEnergyHysteresis();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// The lower threshold for the stallGuard2 value (see smart Energy current up step).
 
 ///////////////////////////////////////////////////////////////////////////////
-class SmartEnergyHysteresisStart : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    SmartEnergyHysteresisStart();
+class SmartEnergyHysteresisStart : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  SmartEnergyHysteresisStart();
 
-    virtual ~SmartEnergyHysteresisStart();
+  virtual ~SmartEnergyHysteresisStart();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Sets the motor current which is used below the threshold speed.
 
 ///////////////////////////////////////////////////////////////////////////////
-class SmartEnergySlowRunCurrent : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    SmartEnergySlowRunCurrent();
+class SmartEnergySlowRunCurrent : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  SmartEnergySlowRunCurrent();
 
-    virtual ~SmartEnergySlowRunCurrent();
+  virtual ~SmartEnergySlowRunCurrent();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Above this speed coolStep becomes enabled.
 
 ///////////////////////////////////////////////////////////////////////////////
-class SmartEnergyThresholdSpeed : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    SmartEnergyThresholdSpeed();
+class SmartEnergyThresholdSpeed : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  SmartEnergyThresholdSpeed();
 
-    virtual ~SmartEnergyThresholdSpeed();
+  virtual ~SmartEnergyThresholdSpeed();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -1711,35 +2031,43 @@ friend class YouBotGripperBar;
 /// 0   standard mode
 /// 1   filtered mode
 ///////////////////////////////////////////////////////////////////////////////
-class StallGuard2FilterEnable : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    StallGuard2FilterEnable();
+class StallGuard2FilterEnable : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  StallGuard2FilterEnable();
 
-    virtual ~StallGuard2FilterEnable();
+  virtual ~StallGuard2FilterEnable();
 
-    void getParameter(bool& parameter) const;
+  void getParameter(bool& parameter) const;
 
-    void setParameter(const bool parameter);
+  void setParameter(const bool parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  bool value;
 
-    bool value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -1748,79 +2076,95 @@ friend class YouBotGripperBar;
 /// 1... 63 less sensitivity
 /// -1... -64 higher sensitivity
 ///////////////////////////////////////////////////////////////////////////////
-class StallGuard2Threshold : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    StallGuard2Threshold();
+class StallGuard2Threshold : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  StallGuard2Threshold();
 
-    virtual ~StallGuard2Threshold();
+  virtual ~StallGuard2Threshold();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// The current limit two seconds after the motor has stopped.
 
 ///////////////////////////////////////////////////////////////////////////////
-class StandbyCurrent : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
+class StandbyCurrent : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
 
-  public:
-    StandbyCurrent();
+public:
+  StandbyCurrent();
 
-    virtual ~StandbyCurrent();
+  virtual ~StandbyCurrent();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -1829,71 +2173,86 @@ friend class YouBotGripperBar;
 /// 1   step interpolation on
 
 ///////////////////////////////////////////////////////////////////////////////
-class StepInterpolationEnable : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
+class StepInterpolationEnable : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
 
+public:
+  StepInterpolationEnable();
 
-  public:
-    StepInterpolationEnable();
+  virtual ~StepInterpolationEnable();
 
-    virtual ~StepInterpolationEnable();
+  void getParameter(bool& parameter) const;
 
-    void getParameter(bool& parameter) const;
+  void setParameter(const bool parameter);
 
-    void setParameter(const bool parameter);
+  void toString(std::string& value) const;
 
-    void toString(std::string& value) const;
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  bool value;
 
-    ParameterType getType() const {return this->parameterType;};
+  std::string name;
 
-    bool value;
-
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Motor stop in case of stall.
 ///////////////////////////////////////////////////////////////////////////////
-class StopOnStall : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    StopOnStall();
+class StopOnStall : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  StopOnStall();
 
-    virtual ~StopOnStall();
+  virtual ~StopOnStall();
 
-    void getParameter(bool& parameter) const;
+  void getParameter(bool& parameter) const;
 
-    void setParameter(const bool parameter);
+  void setParameter(const bool parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  bool value;
 
-    bool value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -1904,113 +2263,137 @@ friend class YouBotGripperBar;
 /// Use default value. Do not change!
 
 ///////////////////////////////////////////////////////////////////////////////
-class Vsense : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    Vsense();
+class Vsense : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  Vsense();
 
-    virtual ~Vsense();
+  virtual ~Vsense();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int& parameter);
+  void setParameter(const unsigned int& parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int upperLimit;
 
-    unsigned int upperLimit;
+  unsigned int lowerLimit;
 
-    unsigned int lowerLimit;
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// The current acceleration (read only).
 ///////////////////////////////////////////////////////////////////////////////
-class ActualAcceleration : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    ActualAcceleration();
+class ActualAcceleration : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  ActualAcceleration();
 
-    virtual ~ActualAcceleration();
+  virtual ~ActualAcceleration();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Should  always  be  set  1  to  ensure  exact reaching  of  the  target  position.  Do  not change!
 ///////////////////////////////////////////////////////////////////////////////
-class MinimumSpeed : public YouBotGripperParameter {
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  public:
-    MinimumSpeed();
+class MinimumSpeed : public YouBotGripperParameter
+{
+  friend class YouBotGripper;
+  friend class YouBotGripperBar;
+public:
+  MinimumSpeed();
 
-    virtual ~MinimumSpeed();
+  virtual ~MinimumSpeed();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value) const;
+  void toString(std::string& value) const;
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 

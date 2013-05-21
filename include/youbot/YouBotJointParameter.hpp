@@ -64,1645 +64,2089 @@
 #include "youbot/YouBotSlaveMsg.hpp"
 #include "youbot/YouBotSlaveMailboxMsg.hpp"
 #include "youbot/YouBotJointStorage.hpp"
-namespace youbot {
+namespace youbot
+{
 
-enum CalibrationDirection {
-  POSITIV,
-  NEGATIV
+enum CalibrationDirection
+{
+  POSITIV, NEGATIV
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// abstract youBot API joint parameter
 ///////////////////////////////////////////////////////////////////////////////
-class YouBotApiJointParameter : public JointParameter {
-friend class YouBotJoint;
-  protected:
-    YouBotApiJointParameter();
+class YouBotApiJointParameter : public JointParameter
+{
+  friend class YouBotJoint;
+protected:
+  YouBotApiJointParameter();
 
+public:
+  virtual ~YouBotApiJointParameter();
 
-  public:
-    virtual ~YouBotApiJointParameter();
+  virtual void toString(std::string& value) = 0;
 
-    virtual void toString(std::string& value) = 0;
+protected:
+  virtual void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                                   const YouBotJointStorage& storage) const = 0;
 
+  virtual void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage) = 0;
 
-  protected:
-    virtual void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const = 0;
+  virtual std::string getName() const = 0;
 
-    virtual void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage) = 0;
+  virtual ParameterType getType() const = 0;
 
-    virtual std::string getName() const = 0;
+  std::string name;
 
-    virtual ParameterType getType() const = 0;
-
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// abstract youBot joint parameter
 ///////////////////////////////////////////////////////////////////////////////
-class YouBotJointParameter : public YouBotJointParameterReadOnly {
-friend class YouBotJoint;
-  protected:
-    YouBotJointParameter();
+class YouBotJointParameter : public YouBotJointParameterReadOnly
+{
+  friend class YouBotJoint;
+protected:
+  YouBotJointParameter();
 
+public:
+  virtual ~YouBotJointParameter();
 
-  public:
-    virtual ~YouBotJointParameter();
+  virtual void toString(std::string& value) = 0;
 
-    virtual void toString(std::string& value) = 0;
+protected:
+  virtual void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                                   const YouBotJointStorage& storage) const = 0;
 
+  virtual void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage) = 0;
 
-  protected:
-    virtual void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const = 0;
+  virtual std::string getName() const = 0;
 
-    virtual void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage) = 0;
+  virtual ParameterType getType() const = 0;
 
-    virtual std::string getName() const = 0;
+  std::string name;
 
-    virtual ParameterType getType() const = 0;
-
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// the name of the joint
 ///////////////////////////////////////////////////////////////////////////////
-class JointName : public YouBotApiJointParameter {
-friend class YouBotJoint;
-  public:
-    JointName();
+class JointName : public YouBotApiJointParameter
+{
+  friend class YouBotJoint;
+public:
+  JointName();
 
-    virtual ~JointName();
+  virtual ~JointName();
 
-    void getParameter(std::string& parameter) const;
+  void getParameter(std::string& parameter) const;
 
-    void setParameter(const std::string parameter);
+  void setParameter(const std::string parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const
+  {
+  }
+  ;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const {};
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage)
+  {
+  }
+  ;
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage) {};
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  std::string value;
 
-    std::string value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Initialize Joint
 ///////////////////////////////////////////////////////////////////////////////
-class InitializeJoint : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    InitializeJoint();
+class InitializeJoint : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  InitializeJoint();
 
-    virtual ~InitializeJoint();
+  virtual ~InitializeJoint();
 
-    void getParameter(bool& parameter) const;
+  void getParameter(bool& parameter) const;
 
-    void setParameter(const bool parameter);
+  void setParameter(const bool parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  bool value;
 
-    bool value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// calibrates the joint
 ///////////////////////////////////////////////////////////////////////////////
-class CalibrateJoint : public YouBotApiJointParameter {
-friend class YouBotJoint;
-  public:
-    CalibrateJoint();
+class CalibrateJoint : public YouBotApiJointParameter
+{
+  friend class YouBotJoint;
+public:
+  CalibrateJoint();
 
-    virtual ~CalibrateJoint();
+  virtual ~CalibrateJoint();
 
-    void getParameter(bool& doCalibration, CalibrationDirection& calibrationDirection, quantity<si::current>& maxCurrent) const;
+  void getParameter(bool& doCalibration, CalibrationDirection& calibrationDirection,
+                    quantity<si::current>& maxCurrent) const;
 
-    void setParameter(const bool doCalibration, CalibrationDirection calibrationDirection, const quantity<si::current>& maxCurrent);
+  void setParameter(const bool doCalibration, CalibrationDirection calibrationDirection,
+                    const quantity<si::current>& maxCurrent);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const
+  {
+  }
+  ;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const {};
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage)
+  {
+  }
+  ;
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage) {};
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  bool doCalibration;
 
-    bool doCalibration;
+  std::string name;
 
-    std::string name;
+  ParameterType parameterType;
 
-    ParameterType parameterType;
+  CalibrationDirection calibrationDirection;
 
-    CalibrationDirection calibrationDirection;
-
-    quantity<si::current> maxCurrent;
+  quantity<si::current> maxCurrent;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// the firmware version of the joint
 ///////////////////////////////////////////////////////////////////////////////
-class FirmwareVersion : public YouBotApiJointParameter {
-friend class YouBotJoint;
-  public:
-    FirmwareVersion();
+class FirmwareVersion : public YouBotApiJointParameter
+{
+  friend class YouBotJoint;
+public:
+  FirmwareVersion();
 
-    virtual ~FirmwareVersion();
+  virtual ~FirmwareVersion();
 
-    void getParameter(int& controllerType, std::string& firmwareVersion) const;
+  void getParameter(int& controllerType, std::string& firmwareVersion) const;
 
-    void setParameter(const int controllerType, const std::string firmwareVersion);
+  void setParameter(const int controllerType, const std::string firmwareVersion);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int controllerType;
 
-    int controllerType;
+  std::string firmwareVersion;
 
-    std::string firmwareVersion;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// the gear ratio which is needed for the calculations in the youBot driver
 ///////////////////////////////////////////////////////////////////////////////
-class GearRatio : public YouBotApiJointParameter {
-friend class YouBotJoint;
-  public:
-    GearRatio();
+class GearRatio : public YouBotApiJointParameter
+{
+  friend class YouBotJoint;
+public:
+  GearRatio();
 
-    virtual ~GearRatio();
+  virtual ~GearRatio();
 
-    void getParameter(double& parameter) const;
+  void getParameter(double& parameter) const;
 
-    void setParameter(const double parameter);
+  void setParameter(const double parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const
+  {
+  }
+  ;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const {};
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage)
+  {
+  }
+  ;
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage) {};
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  double value;
 
-    double value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// the resolution of the encoders, it is needed for the calculations of the youBot Driver
 ///////////////////////////////////////////////////////////////////////////////
-class EncoderTicksPerRound : public YouBotApiJointParameter {
-friend class YouBotJoint;
-  public:
-    EncoderTicksPerRound();
+class EncoderTicksPerRound : public YouBotApiJointParameter
+{
+  friend class YouBotJoint;
+public:
+  EncoderTicksPerRound();
 
-    virtual ~EncoderTicksPerRound();
+  virtual ~EncoderTicksPerRound();
 
-    void getParameter(unsigned int& parameter) const;
+  void getParameter(unsigned int& parameter) const;
 
-    void setParameter(const unsigned int parameter);
+  void setParameter(const unsigned int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const
+  {
+  }
+  ;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const {};
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage)
+  {
+  }
+  ;
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage) {};
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  unsigned int value;
 
-    unsigned int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// inverse the joint movement direction
 ///////////////////////////////////////////////////////////////////////////////
-class InverseMovementDirection : public YouBotApiJointParameter {
-friend class YouBotJoint;
-  public:
-    InverseMovementDirection();
+class InverseMovementDirection : public YouBotApiJointParameter
+{
+  friend class YouBotJoint;
+public:
+  InverseMovementDirection();
 
-    virtual ~InverseMovementDirection();
+  virtual ~InverseMovementDirection();
 
-    void getParameter(bool& parameter) const;
+  void getParameter(bool& parameter) const;
 
-    void setParameter(const bool parameter);
+  void setParameter(const bool parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const
+  {
+  }
+  ;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const {};
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage)
+  {
+  }
+  ;
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage) {};
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  bool value;
 
-    bool value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// joint position limits in encoder ticks
 ///////////////////////////////////////////////////////////////////////////////
-class JointLimits : public YouBotApiJointParameter {
-friend class YouBotJoint;
-  public:
-    JointLimits();
+class JointLimits : public YouBotApiJointParameter
+{
+  friend class YouBotJoint;
+public:
+  JointLimits();
 
-    virtual ~JointLimits();
+  virtual ~JointLimits();
 
-    void getParameter(int& lowerLimit, int& upperLimit, bool& areLimitsActive) const;
+  void getParameter(int& lowerLimit, int& upperLimit, bool& areLimitsActive) const;
 
-    void setParameter(const int lowerLimit, const int upperLimit, const bool activateLimits);
+  void setParameter(const int lowerLimit, const int upperLimit, const bool activateLimits);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const
+  {
+  }
+  ;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const {};
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage)
+  {
+  }
+  ;
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage) {};
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int lowerLimit;
 
-    int lowerLimit;
+  int upperLimit;
 
-    int upperLimit;
+  std::string name;
 
-    std::string name;
+  ParameterType parameterType;
 
-    ParameterType parameterType;
-
-    bool areLimitsActive;
+  bool areLimitsActive;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// joint position limits in radian
 ///////////////////////////////////////////////////////////////////////////////
-class JointLimitsRadian : public YouBotApiJointParameter {
-friend class YouBotJoint;
-  public:
-    JointLimitsRadian();
+class JointLimitsRadian : public YouBotApiJointParameter
+{
+  friend class YouBotJoint;
+public:
+  JointLimitsRadian();
 
-    virtual ~JointLimitsRadian();
+  virtual ~JointLimitsRadian();
 
-    void getParameter(quantity<plane_angle>& lowerLimit, quantity<plane_angle>& upperLimit, bool& areLimitsActive) const;
+  void getParameter(quantity<plane_angle>& lowerLimit, quantity<plane_angle>& upperLimit, bool& areLimitsActive) const;
 
-    void setParameter(const quantity<plane_angle>& lowerLimit, const quantity<plane_angle>& upperLimit, const bool activateLimits);
+  void setParameter(const quantity<plane_angle>& lowerLimit, const quantity<plane_angle>& upperLimit,
+                    const bool activateLimits);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const
+  {
+  }
+  ;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const {};
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage)
+  {
+  }
+  ;
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage) {};
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  quantity<plane_angle> lowerLimit;
 
-    quantity<plane_angle> lowerLimit;
+  quantity<plane_angle> upperLimit;
 
-    quantity<plane_angle> upperLimit;
+  std::string name;
 
-    std::string name;
+  ParameterType parameterType;
 
-    ParameterType parameterType;
-
-    bool areLimitsActive;
+  bool areLimitsActive;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// the resolution of the encoders, it is needed for the calculations of the youBot Driver
 ///////////////////////////////////////////////////////////////////////////////
-class TorqueConstant : public YouBotApiJointParameter {
-friend class YouBotJoint;
-  public:
-    TorqueConstant();
+class TorqueConstant : public YouBotApiJointParameter
+{
+  friend class YouBotJoint;
+public:
+  TorqueConstant();
 
-    virtual ~TorqueConstant();
+  virtual ~TorqueConstant();
 
-    void getParameter(double& parameter) const;
+  void getParameter(double& parameter) const;
 
-    void setParameter(const double parameter);
+  void setParameter(const double parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const
+  {
+  }
+  ;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const {};
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage)
+  {
+  }
+  ;
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage) {};
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  double value;
 
-    double value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// The maximum velocity used for move to position command when executing a ramp to a position. In sensorless commutation mode the velocity threshold for hallFX. In sensorless commutation mode used as velocity threshold for hallFXTM. Set this value to a realistic velocity which the motor can reach!
 ///////////////////////////////////////////////////////////////////////////////
-class MaximumPositioningVelocity : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    MaximumPositioningVelocity();
+class MaximumPositioningVelocity : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  MaximumPositioningVelocity();
 
-    virtual ~MaximumPositioningVelocity();
+  virtual ~MaximumPositioningVelocity();
 
-    void getParameter(quantity<angular_velocity>& parameter) const;
+  void getParameter(quantity<angular_velocity>& parameter) const;
 
-    void setParameter(const quantity<angular_velocity>& parameter);
+  void setParameter(const quantity<angular_velocity>& parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  quantity<angular_velocity> upperLimit;
 
-    quantity<angular_velocity> upperLimit;
+  quantity<angular_velocity> lowerLimit;
 
-    quantity<angular_velocity> lowerLimit;
+  quantity<angular_velocity> value;
 
-    quantity<angular_velocity> value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Acceleration parameter for velocity control and position control
 ///////////////////////////////////////////////////////////////////////////////
-class MotorAcceleration : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    MotorAcceleration();
+class MotorAcceleration : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  MotorAcceleration();
 
-    virtual ~MotorAcceleration();
+  virtual ~MotorAcceleration();
 
-    void getParameter(quantity<angular_acceleration>& parameter) const;
+  void getParameter(quantity<angular_acceleration>& parameter) const;
 
-    void setParameter(const quantity<angular_acceleration>& parameter);
+  void setParameter(const quantity<angular_acceleration>& parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  quantity<angular_acceleration> upperLimit;
 
-    quantity<angular_acceleration> upperLimit;
+  quantity<angular_acceleration> lowerLimit;
 
-    quantity<angular_acceleration> lowerLimit;
+  quantity<angular_acceleration> value;
 
-    quantity<angular_acceleration> value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Switches the ramp generator for speed and position control on and off 
 ///////////////////////////////////////////////////////////////////////////////
-class RampGeneratorSpeedAndPositionControl : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    RampGeneratorSpeedAndPositionControl();
+class RampGeneratorSpeedAndPositionControl : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  RampGeneratorSpeedAndPositionControl();
 
-    virtual ~RampGeneratorSpeedAndPositionControl();
+  virtual ~RampGeneratorSpeedAndPositionControl();
 
-    void getParameter(bool& parameter) const;
+  void getParameter(bool& parameter) const;
 
-    void setParameter(const bool parameter);
+  void setParameter(const bool parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  bool value;
 
-    bool value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Switching threshold for position control between the first and second set of parameters. If the velocity threshold is set to zero, the parameter set 2 is used all the time.
 ///////////////////////////////////////////////////////////////////////////////
-class PositionControlSwitchingThreshold : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    PositionControlSwitchingThreshold();
+class PositionControlSwitchingThreshold : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  PositionControlSwitchingThreshold();
 
-    virtual ~PositionControlSwitchingThreshold();
+  virtual ~PositionControlSwitchingThreshold();
 
-    void getParameter(quantity<angular_velocity>& parameter) const;
+  void getParameter(quantity<angular_velocity>& parameter) const;
 
-    void setParameter(const quantity<angular_velocity>& parameter);
+  void setParameter(const quantity<angular_velocity>& parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  quantity<angular_velocity> upperLimit;
 
-    quantity<angular_velocity> upperLimit;
+  quantity<angular_velocity> lowerLimit;
 
-    quantity<angular_velocity> lowerLimit;
+  quantity<angular_velocity> value;
 
-    quantity<angular_velocity> value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Adjusts the limit to switch between first velocity PID parameter set and second velocity PID parameter set. If the velocity threshold is set to zero, the parameter set 2 is used all the time.
 
 ///////////////////////////////////////////////////////////////////////////////
-class SpeedControlSwitchingThreshold : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    SpeedControlSwitchingThreshold();
+class SpeedControlSwitchingThreshold : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  SpeedControlSwitchingThreshold();
 
-    virtual ~SpeedControlSwitchingThreshold();
+  virtual ~SpeedControlSwitchingThreshold();
 
-    void getParameter(quantity<angular_velocity>& parameter) const;
+  void getParameter(quantity<angular_velocity>& parameter) const;
 
-    void setParameter(const quantity<angular_velocity>& parameter);
+  void setParameter(const quantity<angular_velocity>& parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  quantity<angular_velocity> upperLimit;
 
-    quantity<angular_velocity> upperLimit;
+  quantity<angular_velocity> lowerLimit;
 
-    quantity<angular_velocity> lowerLimit;
+  quantity<angular_velocity> value;
 
-    quantity<angular_velocity> value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Velocity to switch from controlled to hallFX mode. Set this value to a realistic velocity which the motor can reach in controlled mode!
 ///////////////////////////////////////////////////////////////////////////////
-class VelocityThresholdForHallFX : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    VelocityThresholdForHallFX();
+class VelocityThresholdForHallFX : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  VelocityThresholdForHallFX();
 
-    virtual ~VelocityThresholdForHallFX();
+  virtual ~VelocityThresholdForHallFX();
 
-    void getParameter(quantity<angular_velocity>& parameter) const;
+  void getParameter(quantity<angular_velocity>& parameter) const;
 
-    void setParameter(const quantity<angular_velocity>& parameter);
+  void setParameter(const quantity<angular_velocity>& parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  quantity<angular_velocity> upperLimit;
 
-    quantity<angular_velocity> upperLimit;
+  quantity<angular_velocity> lowerLimit;
 
-    quantity<angular_velocity> lowerLimit;
+  quantity<angular_velocity> value;
 
-    quantity<angular_velocity> value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// P-Parameter of PID position regulator (first position parameter set)
 ///////////////////////////////////////////////////////////////////////////////
-class PParameterFirstParametersPositionControl : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    PParameterFirstParametersPositionControl();
+class PParameterFirstParametersPositionControl : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  PParameterFirstParametersPositionControl();
 
-    virtual ~PParameterFirstParametersPositionControl();
+  virtual ~PParameterFirstParametersPositionControl();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// I-Parameter of PID position regulator (first position parameter set)
 ///////////////////////////////////////////////////////////////////////////////
-class IParameterFirstParametersPositionControl : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    IParameterFirstParametersPositionControl();
+class IParameterFirstParametersPositionControl : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  IParameterFirstParametersPositionControl();
 
-    virtual ~IParameterFirstParametersPositionControl();
+  virtual ~IParameterFirstParametersPositionControl();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// D-Parameter of PID position regulator (first position parameter set)
 ///////////////////////////////////////////////////////////////////////////////
-class DParameterFirstParametersPositionControl : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    DParameterFirstParametersPositionControl();
+class DParameterFirstParametersPositionControl : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  DParameterFirstParametersPositionControl();
 
-    virtual ~DParameterFirstParametersPositionControl();
+  virtual ~DParameterFirstParametersPositionControl();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Adjust in standstill to lowest possible value at which the motor keeps its position. A too high value causes overshooting at positioning mode. (first position parameter set)
 ///////////////////////////////////////////////////////////////////////////////
-class IClippingParameterFirstParametersPositionControl : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    IClippingParameterFirstParametersPositionControl();
+class IClippingParameterFirstParametersPositionControl : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  IClippingParameterFirstParametersPositionControl();
 
-    virtual ~IClippingParameterFirstParametersPositionControl();
+  virtual ~IClippingParameterFirstParametersPositionControl();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// P-Parameter of PID velocity regulator. This PID parameter set is used at lower velocity. (first velocity parameter set) 
 ///////////////////////////////////////////////////////////////////////////////
-class PParameterFirstParametersSpeedControl : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    PParameterFirstParametersSpeedControl();
+class PParameterFirstParametersSpeedControl : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  PParameterFirstParametersSpeedControl();
 
-    virtual ~PParameterFirstParametersSpeedControl();
+  virtual ~PParameterFirstParametersSpeedControl();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// I-Parameter of PID velocity regulator. This PID parameter set is used at lower velocity. (first velocity parameter set) 
 ///////////////////////////////////////////////////////////////////////////////
-class IParameterFirstParametersSpeedControl : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    IParameterFirstParametersSpeedControl();
+class IParameterFirstParametersSpeedControl : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  IParameterFirstParametersSpeedControl();
 
-    virtual ~IParameterFirstParametersSpeedControl();
+  virtual ~IParameterFirstParametersSpeedControl();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// D-Parameter of PID velocity regulator. This PID parameter set is used at lower velocity. (first velocity parameter set) 
 ///////////////////////////////////////////////////////////////////////////////
-class DParameterFirstParametersSpeedControl : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    DParameterFirstParametersSpeedControl();
+class DParameterFirstParametersSpeedControl : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  DParameterFirstParametersSpeedControl();
 
-    virtual ~DParameterFirstParametersSpeedControl();
+  virtual ~DParameterFirstParametersSpeedControl();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// This PID parameter set is used at lower velocity. (first velocity parameter set)
 ///////////////////////////////////////////////////////////////////////////////
-class IClippingParameterFirstParametersSpeedControl : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    IClippingParameterFirstParametersSpeedControl();
+class IClippingParameterFirstParametersSpeedControl : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  IClippingParameterFirstParametersSpeedControl();
 
-    virtual ~IClippingParameterFirstParametersSpeedControl();
+  virtual ~IClippingParameterFirstParametersSpeedControl();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// P-Parameter of PID position regulator (second position parameter set)
 ///////////////////////////////////////////////////////////////////////////////
-class PParameterSecondParametersPositionControl : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    PParameterSecondParametersPositionControl();
+class PParameterSecondParametersPositionControl : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  PParameterSecondParametersPositionControl();
 
-    virtual ~PParameterSecondParametersPositionControl();
+  virtual ~PParameterSecondParametersPositionControl();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// I-Parameter of PID position regulator (second position parameter set)
 ///////////////////////////////////////////////////////////////////////////////
-class IParameterSecondParametersPositionControl : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    IParameterSecondParametersPositionControl();
+class IParameterSecondParametersPositionControl : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  IParameterSecondParametersPositionControl();
 
-    virtual ~IParameterSecondParametersPositionControl();
+  virtual ~IParameterSecondParametersPositionControl();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// D-Parameter of PID position regulator (second position parameter set)
 ///////////////////////////////////////////////////////////////////////////////
-class DParameterSecondParametersPositionControl : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    DParameterSecondParametersPositionControl();
+class DParameterSecondParametersPositionControl : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  DParameterSecondParametersPositionControl();
 
-    virtual ~DParameterSecondParametersPositionControl();
+  virtual ~DParameterSecondParametersPositionControl();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Adjust in standstill to lowest possible value at which the motor keeps its position. A too high value causes overshooting at positioning mode. (second position parameter set)
 ///////////////////////////////////////////////////////////////////////////////
-class IClippingParameterSecondParametersPositionControl : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    IClippingParameterSecondParametersPositionControl();
+class IClippingParameterSecondParametersPositionControl : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  IClippingParameterSecondParametersPositionControl();
 
-    virtual ~IClippingParameterSecondParametersPositionControl();
+  virtual ~IClippingParameterSecondParametersPositionControl();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// P-Parameter of PID velocity regulator (second position parameter set)
 ///////////////////////////////////////////////////////////////////////////////
-class PParameterSecondParametersSpeedControl : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    PParameterSecondParametersSpeedControl();
+class PParameterSecondParametersSpeedControl : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  PParameterSecondParametersSpeedControl();
 
-    virtual ~PParameterSecondParametersSpeedControl();
+  virtual ~PParameterSecondParametersSpeedControl();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// I-Parameter of PID velocity regulator (second position parameter set)
 ///////////////////////////////////////////////////////////////////////////////
-class IParameterSecondParametersSpeedControl : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    IParameterSecondParametersSpeedControl();
+class IParameterSecondParametersSpeedControl : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  IParameterSecondParametersSpeedControl();
 
-    virtual ~IParameterSecondParametersSpeedControl();
+  virtual ~IParameterSecondParametersSpeedControl();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// D-Parameter of PID velocity regulator (second position parameter set)
 ///////////////////////////////////////////////////////////////////////////////
-class DParameterSecondParametersSpeedControl : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    DParameterSecondParametersSpeedControl();
+class DParameterSecondParametersSpeedControl : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  DParameterSecondParametersSpeedControl();
 
-    virtual ~DParameterSecondParametersSpeedControl();
+  virtual ~DParameterSecondParametersSpeedControl();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// I-Clipping Parameter of PID current regulator. This PID parameter set is used at lower velocity. (second position parameter set)
 ///////////////////////////////////////////////////////////////////////////////
-class IClippingParameterSecondParametersSpeedControl : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    IClippingParameterSecondParametersSpeedControl();
+class IClippingParameterSecondParametersSpeedControl : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  IClippingParameterSecondParametersSpeedControl();
 
-    virtual ~IClippingParameterSecondParametersSpeedControl();
+  virtual ~IClippingParameterSecondParametersSpeedControl();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// P-Parameter of PID current regulator.
 ///////////////////////////////////////////////////////////////////////////////
-class PParameterCurrentControl : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    PParameterCurrentControl();
+class PParameterCurrentControl : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  PParameterCurrentControl();
 
-    virtual ~PParameterCurrentControl();
+  virtual ~PParameterCurrentControl();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// I-Parameter of PID current regulator.
 ///////////////////////////////////////////////////////////////////////////////
-class IParameterCurrentControl : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    IParameterCurrentControl();
+class IParameterCurrentControl : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  IParameterCurrentControl();
 
-    virtual ~IParameterCurrentControl();
+  virtual ~IParameterCurrentControl();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// D-Parameter of PID current regulator.
 ///////////////////////////////////////////////////////////////////////////////
-class DParameterCurrentControl : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    DParameterCurrentControl();
+class DParameterCurrentControl : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  DParameterCurrentControl();
 
-    virtual ~DParameterCurrentControl();
+  virtual ~DParameterCurrentControl();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// I-Clipping Parameter of PID current regulator. 
 ///////////////////////////////////////////////////////////////////////////////
-class IClippingParameterCurrentControl : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    IClippingParameterCurrentControl();
+class IClippingParameterCurrentControl : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  IClippingParameterCurrentControl();
 
-    virtual ~IClippingParameterCurrentControl();
+  virtual ~IClippingParameterCurrentControl();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Maximum velocity at which end position can be set. Prevents issuing of end position when the target is passed at high velocity
 ///////////////////////////////////////////////////////////////////////////////
-class MaximumVelocityToSetPosition : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    MaximumVelocityToSetPosition();
+class MaximumVelocityToSetPosition : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  MaximumVelocityToSetPosition();
 
-    virtual ~MaximumVelocityToSetPosition();
+  virtual ~MaximumVelocityToSetPosition();
 
-    void getParameter(quantity<angular_velocity>& parameter) const;
+  void getParameter(quantity<angular_velocity>& parameter) const;
 
-    void setParameter(const quantity<angular_velocity>& parameter);
+  void setParameter(const quantity<angular_velocity>& parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  quantity<angular_velocity> upperLimit;
 
-    quantity<angular_velocity> upperLimit;
+  quantity<angular_velocity> lowerLimit;
 
-    quantity<angular_velocity> lowerLimit;
+  quantity<angular_velocity> value;
 
-    quantity<angular_velocity> value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Maximum distance at which the position end flag is set.
 ///////////////////////////////////////////////////////////////////////////////
-class PositionTargetReachedDistance : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    PositionTargetReachedDistance();
+class PositionTargetReachedDistance : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  PositionTargetReachedDistance();
 
-    virtual ~PositionTargetReachedDistance();
+  virtual ~PositionTargetReachedDistance();
 
-    void getParameter(int& parameter) const;
+  void getParameter(int& parameter) const;
 
-    void setParameter(const int parameter);
+  void setParameter(const int parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  int upperLimit;
 
-    int upperLimit;
+  int lowerLimit;
 
-    int lowerLimit;
+  int value;
 
-    int value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Clear the flag that indicates that the I2t sum has exceeded the I2t limit.
 ///////////////////////////////////////////////////////////////////////////////
-class ClearI2tExceededFlag : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    ClearI2tExceededFlag();
+class ClearI2tExceededFlag : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  ClearI2tExceededFlag();
 
-    virtual ~ClearI2tExceededFlag();
+  virtual ~ClearI2tExceededFlag();
 
-    void getParameter() const;
+  void getParameter() const;
 
-    void setParameter();
+  void setParameter();
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  bool value;
 
-    bool value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// Clear the flag that indicates a communication timeout between the EtherCAT master and the controller.
 
 ///////////////////////////////////////////////////////////////////////////////
-class ClearMotorControllerTimeoutFlag : public YouBotJointParameter {
-friend class YouBotJoint;
-  public:
-    ClearMotorControllerTimeoutFlag();
+class ClearMotorControllerTimeoutFlag : public YouBotJointParameter
+{
+  friend class YouBotJoint;
+public:
+  ClearMotorControllerTimeoutFlag();
 
-    virtual ~ClearMotorControllerTimeoutFlag();
+  virtual ~ClearMotorControllerTimeoutFlag();
 
-    bool getParameter() const;
+  bool getParameter() const;
 
-    void setParameter();
+  void setParameter();
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType,
+                           const YouBotJointStorage& storage) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+  void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  bool value;
 
-    bool value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// P-Parameter of PID trajectory regulator
 ///////////////////////////////////////////////////////////////////////////////
-class PParameterTrajectoryControl : public YouBotApiJointParameter {
-friend class YouBotJoint;
-  public:
-    PParameterTrajectoryControl();
+class PParameterTrajectoryControl : public YouBotApiJointParameter
+{
+  friend class YouBotJoint;
+public:
+  PParameterTrajectoryControl();
 
-    virtual ~PParameterTrajectoryControl();
+  virtual ~PParameterTrajectoryControl();
 
-    void getParameter(double& parameter) const;
+  void getParameter(double& parameter) const;
 
-    void setParameter(const double parameter);
+  void setParameter(const double parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-  private:
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  double upperLimit;
 
-    double upperLimit;
+  double lowerLimit;
 
-    double lowerLimit;
+  double value;
 
-    double value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// I-Parameter of PID trajectory regulator 
 ///////////////////////////////////////////////////////////////////////////////
-class IParameterTrajectoryControl : public YouBotApiJointParameter {
-friend class YouBotJoint;
-  public:
-    IParameterTrajectoryControl();
+class IParameterTrajectoryControl : public YouBotApiJointParameter
+{
+  friend class YouBotJoint;
+public:
+  IParameterTrajectoryControl();
 
-    virtual ~IParameterTrajectoryControl();
+  virtual ~IParameterTrajectoryControl();
 
-    void getParameter(double& parameter) const;
+  void getParameter(double& parameter) const;
 
-    void setParameter(const double parameter);
+  void setParameter(const double parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-  private:
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  double upperLimit;
 
-    double upperLimit;
+  double lowerLimit;
 
-    double lowerLimit;
+  double value;
 
-    double value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// D-Parameter of PID trajectory regulator
 ///////////////////////////////////////////////////////////////////////////////
-class DParameterTrajectoryControl : public YouBotApiJointParameter {
-friend class YouBotJoint;
-  public:
-    DParameterTrajectoryControl();
+class DParameterTrajectoryControl : public YouBotApiJointParameter
+{
+  friend class YouBotJoint;
+public:
+  DParameterTrajectoryControl();
 
-    virtual ~DParameterTrajectoryControl();
+  virtual ~DParameterTrajectoryControl();
 
-    void getParameter(double& parameter) const;
+  void getParameter(double& parameter) const;
 
-    void setParameter(const double parameter);
+  void setParameter(const double parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-  private:
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  double upperLimit;
 
-    double upperLimit;
+  double lowerLimit;
 
-    double lowerLimit;
+  double value;
 
-    double value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 ///////////////////////////////////////////////////////////////////////////////
 /// gives a limit for the I sum part of the trajectory regulator
 ///////////////////////////////////////////////////////////////////////////////
-class IClippingParameterTrajectoryControl : public YouBotApiJointParameter {
-friend class YouBotJoint;
-  public:
-    IClippingParameterTrajectoryControl();
+class IClippingParameterTrajectoryControl : public YouBotApiJointParameter
+{
+  friend class YouBotJoint;
+public:
+  IClippingParameterTrajectoryControl();
 
-    virtual ~IClippingParameterTrajectoryControl();
+  virtual ~IClippingParameterTrajectoryControl();
 
-    void getParameter(double& parameter) const;
+  void getParameter(double& parameter) const;
 
-    void setParameter(const double parameter);
+  void setParameter(const double parameter);
 
-    void toString(std::string& value);
+  void toString(std::string& value);
 
+private:
+  std::string getName() const
+  {
+    return this->name;
+  }
+  ;
 
-  private:
-    std::string getName() const {return this->name;};
+  ParameterType getType() const
+  {
+    return this->parameterType;
+  }
+  ;
 
-    ParameterType getType() const {return this->parameterType;};
+  double upperLimit;
 
-    double upperLimit;
+  double lowerLimit;
 
-    double lowerLimit;
+  double value;
 
-    double value;
+  std::string name;
 
-    std::string name;
-
-    ParameterType parameterType;
+  ParameterType parameterType;
 
 };
 

@@ -23,7 +23,7 @@
  * by itself cause the resulting work to be covered by the GNU General Public
  * License. However the source code for this file must still be made available
  * in accordance with section (3) of the GNU General Public License.
-	 *
+ *
  * This exception does not invalidate any other reasons why a work based on
  * this file might be covered by the GNU General Public License.
  *
@@ -36,7 +36,7 @@
  * In case you did not receive a copy of the EtherCAT Master License along with
  * SOEM write to Beckhoff Automation GmbH, Eiserstraße 5, D-33415 Verl, Germany
  * (www.beckhoff.com).
-	 */
+ */
 
 /** \file 
  * \brief
@@ -64,37 +64,37 @@
 /** SoE name structure */
 typedef struct PACKED
 {
-	/** current length in bytes of list */
-	uint16		currentlength;
-	/** maximum length in bytes of list */
-	uint16		maxlength;
-	char		name[EC_SOE_MAXNAME];
+  /** current length in bytes of list */
+  uint16 currentlength;
+  /** maximum length in bytes of list */
+  uint16 maxlength;
+  char name[EC_SOE_MAXNAME];
 } ec_SoEnamet;
 
 /** SoE list structure */
 typedef struct PACKED
 {
-	/** current length in bytes of list */
-	uint16		currentlength;
-	/** maximum length in bytes of list */
-	uint16		maxlength;
-	union
-	{	
-		uint8	byte[8];
-		uint16	word[4];
-		uint32	dword[2];
-		uint64	lword[1];
-	};	
+  /** current length in bytes of list */
+  uint16 currentlength;
+  /** maximum length in bytes of list */
+  uint16 maxlength;
+  union
+  {
+    uint8 byte[8];
+    uint16 word[4];
+    uint32 dword[2];
+    uint64 lword[1];
+  };
 } ec_SoElistt;
 
 /** SoE IDN mapping structure */
 typedef struct PACKED
 {
-	/** current length in bytes of list */
-	uint16		currentlength;
-	/** maximum length in bytes of list */
-	uint16		maxlength;
-	uint16		idn[EC_SOE_MAXMAPPING];
+  /** current length in bytes of list */
+  uint16 currentlength;
+  /** maximum length in bytes of list */
+  uint16 maxlength;
+  uint16 idn[EC_SOE_MAXMAPPING];
 } ec_SoEmappingt;
 
 #define EC_SOE_LENGTH_1			0x00
@@ -113,26 +113,26 @@ typedef struct PACKED
 /** SoE attribute structure */
 typedef struct PACKED
 {
-	/** evaluation factor for display purposes */
-	uint32		evafactor	:16;
-	/** length of IDN element(s) */
-	uint32		length		:2;
-	/** IDN is list */
-	uint32		list		:1;
-	/** IDN is command */
-	uint32		command		:1;
-	/** datatype */
-	uint32		datatype	:3;
-	uint32		reserved1	:1;
-	/** decimals to display if float datatype */
-	uint32		decimals	:4;
-	/** write protected in pre-op */
-	uint32		wppreop		:1;
-	/** write protected in safe-op */
-	uint32		wpsafeop	:1;
-	/** write protected in op */
-	uint32		wpop		:1;
-	uint32		reserved2	:1;
+  /** evaluation factor for display purposes */
+  uint32 evafactor :16;
+  /** length of IDN element(s) */
+  uint32 length :2;
+  /** IDN is list */
+  uint32 list :1;
+  /** IDN is command */
+  uint32 command :1;
+  /** datatype */
+  uint32 datatype :3;
+  uint32 reserved1 :1;
+  /** decimals to display if float datatype */
+  uint32 decimals :4;
+  /** write protected in pre-op */
+  uint32 wppreop :1;
+  /** write protected in safe-op */
+  uint32 wpsafeop :1;
+  /** write protected in op */
+  uint32 wpop :1;
+  uint32 reserved2 :1;
 } ec_SoEattributet;
 
 int ec_SoEread(uint16 slave, uint8 driveNo, uint8 elementflags, uint16 idn, int *psize, void *p, int timeout);

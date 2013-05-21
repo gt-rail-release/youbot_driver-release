@@ -73,78 +73,75 @@
 #include "youbot/YouBotGripperBar.hpp"
 #include <boost/scoped_ptr.hpp>
 
-namespace youbot {
+namespace youbot
+{
 
 ///////////////////////////////////////////////////////////////////////////////
 /// The youBot gripper with one degree of freedom
 ///////////////////////////////////////////////////////////////////////////////
-class YouBotGripper : public OneDOFGripper {
-  public:
-    YouBotGripper(const unsigned int jointNo, const std::string& configFilePath);
+class YouBotGripper : public OneDOFGripper
+{
+public:
+  YouBotGripper(const unsigned int jointNo, const std::string& configFilePath);
 
-    virtual ~YouBotGripper();
+  virtual ~YouBotGripper();
 
+protected:
+  virtual void getConfigurationParameter(GripperParameter& parameter) const;
 
-  protected:
-    virtual void getConfigurationParameter(GripperParameter& parameter) const;
+  virtual void setConfigurationParameter(const GripperParameter& parameter);
 
-    virtual void setConfigurationParameter(const GripperParameter& parameter);
+public:
+  virtual void getConfigurationParameter(GripperFirmwareVersion& parameter) const;
 
+  virtual void setConfigurationParameter(const CalibrateGripper& parameter);
 
-  public:
-    virtual void getConfigurationParameter(GripperFirmwareVersion& parameter) const;
+  virtual void getConfigurationParameter(YouBotSlaveMailboxMsg& parameter) const;
 
-    virtual void setConfigurationParameter(const CalibrateGripper& parameter);
+protected:
+  virtual void getData(const GripperData& data) const;
 
-    virtual void getConfigurationParameter(YouBotSlaveMailboxMsg& parameter) const;
+  virtual void setData(const GripperData& data);
 
+  virtual void getData(OneDOFGripperData& data) const;
 
-  protected:
-    virtual void getData(const GripperData& data) const;
+  virtual void setData(const OneDOFGripperData& data);
 
-    virtual void setData(const GripperData& data);
+public:
+  virtual void setData(const GripperBarSpacingSetPoint& barSpacing);
 
-    virtual void getData(OneDOFGripperData& data) const;
+  virtual void getData(GripperSensedBarSpacing& barSpacing) const;
 
-    virtual void setData(const OneDOFGripperData& data);
+  void open();
 
+  void close();
 
-  public:
-    virtual void setData(const GripperBarSpacingSetPoint& barSpacing);
+  YouBotGripperBar& getGripperBar1();
 
-    virtual void getData(GripperSensedBarSpacing& barSpacing) const;
+  YouBotGripperBar& getGripperBar2();
 
-    void open();
+private:
+  YouBotGripper(const YouBotGripper & source);
 
-    void close();
+  YouBotGripper & operator=(const YouBotGripper & source);
 
-    YouBotGripperBar& getGripperBar1();
+  void parseMailboxStatusFlags(const YouBotSlaveMailboxMsg& mailboxMsg) const;
 
-    YouBotGripperBar& getGripperBar2();
+  bool setValueToMotorContoller(const YouBotSlaveMailboxMsg& mailboxMsg) const;
 
+  bool retrieveValueFromMotorContoller(YouBotSlaveMailboxMsg& message) const;
 
-  private:
-    YouBotGripper(const YouBotGripper & source);
+  EthercatMasterInterface* ethercatMaster;
 
-    YouBotGripper & operator=(const YouBotGripper & source);
+  unsigned int timeTillNextMailboxUpdate;
 
-    void parseMailboxStatusFlags(const YouBotSlaveMailboxMsg& mailboxMsg) const;
+  unsigned int mailboxMsgRetries;
 
-    bool setValueToMotorContoller(const YouBotSlaveMailboxMsg& mailboxMsg) const;
+  unsigned int jointNumber;
 
-    bool retrieveValueFromMotorContoller(YouBotSlaveMailboxMsg& message) const;
+  boost::scoped_ptr<YouBotGripperBar> bar1;
 
-    EthercatMasterInterface* ethercatMaster;
-
-    unsigned int timeTillNextMailboxUpdate;
-
-    unsigned int mailboxMsgRetries;
-
-    unsigned int jointNumber;
-
-    boost::scoped_ptr<YouBotGripperBar> bar1;
-
-    boost::scoped_ptr<YouBotGripperBar> bar2;
+  boost::scoped_ptr<YouBotGripperBar> bar2;
 
 };
 

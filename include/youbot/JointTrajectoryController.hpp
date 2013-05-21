@@ -66,9 +66,8 @@
 #include "youbot/YouBotJointParameterPasswordProtected.hpp"
 #include "generic/dataobjectlockfree/DataObjectLockFree.hpp"
 
-namespace youbot {
-
-
+namespace youbot
+{
 
 /// Spline for a joint trajectory 
 /// coef[0] + coef[1]*t + ... + coef[5]*t^5
@@ -76,12 +75,15 @@ struct Spline
 {
   std::vector<double> coef;
 
-  Spline() : coef(6, 0.0) {}
+  Spline() :
+      coef(6, 0.0)
+  {
+  }
 };
 
 /// Joint trajectory segment
 struct Segment
- {
+{
   boost::posix_time::ptime start_time;
   boost::posix_time::time_duration duration;
   Spline spline;
@@ -90,88 +92,105 @@ struct Segment
 ///////////////////////////////////////////////////////////////////////////////
 /// Joint Trajectory Controller
 ///////////////////////////////////////////////////////////////////////////////
-class JointTrajectoryController {
-  public:
-    JointTrajectoryController();
+class JointTrajectoryController
+{
+public:
+  JointTrajectoryController();
 
-    virtual ~JointTrajectoryController();
+  virtual ~JointTrajectoryController();
 
+private:
+  JointTrajectoryController(const JointTrajectoryController & source);
 
-  private:
-    JointTrajectoryController(const JointTrajectoryController & source);
+  JointTrajectoryController & operator=(const JointTrajectoryController & source);
 
-    JointTrajectoryController & operator=(const JointTrajectoryController & source);
+public:
+  void getConfigurationParameter(double& PParameter, double& IParameter, double& DParameter, double& IClippingMax,
+                                 double& IClippingMin);
 
+  void setConfigurationParameter(const double PParameter, const double IParameter, const double DParameter,
+                                 const double IClippingMax, const double IClippingMin);
 
-  public:
-    void getConfigurationParameter(double& PParameter, double& IParameter, double& DParameter, double& IClippingMax, double& IClippingMin);
+  void setTrajectory(const JointTrajectory& input_traj);
 
-    void setConfigurationParameter(const double PParameter, const double IParameter, const double DParameter, const double IClippingMax, const double IClippingMin);
+  void cancelCurrentTrajectory();
 
-    void setTrajectory(const JointTrajectory& input_traj);
+  bool isTrajectoryControllerActive();
 
-    void cancelCurrentTrajectory();
+  bool updateTrajectoryController(const SlaveMessageInput& actual, SlaveMessageOutput& velocity);
 
-    bool isTrajectoryControllerActive();
+  void getLastTargetPosition(JointAngleSetpoint& position);
 
-    bool updateTrajectoryController(const SlaveMessageInput& actual, SlaveMessageOutput& velocity);
+  void getLastTargetVelocity(JointVelocitySetpoint& velocity);
 
-    void getLastTargetPosition(JointAngleSetpoint& position);
-    
-    void getLastTargetVelocity(JointVelocitySetpoint& velocity);
-    
-    void setGearRatio(const double& ratio) {this->gearRatio = ratio;};
-    
-    void setEncoderTicksPerRound(const int& encoderTicks) {this->encoderTicksPerRound = encoderTicks;};
-    
-    void setInverseMovementDirection(const bool invDirection) {this->inverseDirection = invDirection;};
+  void setGearRatio(const double& ratio)
+  {
+    this->gearRatio = ratio;
+  }
+  ;
 
+  void setEncoderTicksPerRound(const int& encoderTicks)
+  {
+    this->encoderTicksPerRound = encoderTicks;
+  }
+  ;
 
-  private:
-    void getQuinticSplineCoefficients(const double start_pos, const double start_vel, const double start_acc, const double end_pos, const double end_vel, const double end_acc, const double time, std::vector<double>& coefficients);
+  void setInverseMovementDirection(const bool invDirection)
+  {
+    this->inverseDirection = invDirection;
+  }
+  ;
 
-    void sampleQuinticSpline(const std::vector<double>& coefficients, const double time, double& position, double& velocity, double& acceleration);
+private:
+  void getQuinticSplineCoefficients(const double start_pos, const double start_vel, const double start_acc,
+                                    const double end_pos, const double end_vel, const double end_acc, const double time,
+                                    std::vector<double>& coefficients);
 
-    void getCubicSplineCoefficients(const double start_pos, const double start_vel, const double end_pos, const double end_vel, const double time, std::vector<double>& coefficients);
+  void sampleQuinticSpline(const std::vector<double>& coefficients, const double time, double& position,
+                           double& velocity, double& acceleration);
 
-    void generatePowers(const int n, const double x, double* powers);
+  void getCubicSplineCoefficients(const double start_pos, const double start_vel, const double end_pos,
+                                  const double end_vel, const double time, std::vector<double>& coefficients);
 
-    void sampleSplineWithTimeBounds(const std::vector<double>& coefficients, const double duration, const double time, double& position, double& velocity, double& acceleration);
+  void generatePowers(const int n, const double x, double* powers);
 
-    bool isControllerActive;
+  void sampleSplineWithTimeBounds(const std::vector<double>& coefficients, const double duration, const double time,
+                                  double& position, double& velocity, double& acceleration);
 
-    PidController pid;
+  bool isControllerActive;
 
-    boost::posix_time::ptime time;
+  PidController pid;
 
-    boost::posix_time::ptime last_time;
+  boost::posix_time::ptime time;
 
-    typedef std::vector<Segment> SpecifiedTrajectory;
+  boost::posix_time::ptime last_time;
 
-    DataObjectLockFree< boost::shared_ptr<const SpecifiedTrajectory> > current_trajectory_box_;
+  typedef std::vector<Segment> SpecifiedTrajectory;
 
-    double targetPosition;
+  DataObjectLockFree<boost::shared_ptr<const SpecifiedTrajectory> > current_trajectory_box_;
 
-    double targetVelocity;
+  double targetPosition;
 
-    double targetAcceleration;
-    
-    int encoderTicksPerRound;
-    
-    double gearRatio;
-    
-    bool inverseDirection;
-    
-    double pose_error;
-    
-    double velocity_error;
-    
-    double velsetpoint;
-    
-    double time_till_seg_start;
-    double duration;
-    double actualpose;
-    double actualvel;
+  double targetVelocity;
+
+  double targetAcceleration;
+
+  int encoderTicksPerRound;
+
+  double gearRatio;
+
+  bool inverseDirection;
+
+  double pose_error;
+
+  double velocity_error;
+
+  double velsetpoint;
+
+  double time_till_seg_start;
+  double duration;
+  double actualpose;
+  double actualvel;
 
 };
 

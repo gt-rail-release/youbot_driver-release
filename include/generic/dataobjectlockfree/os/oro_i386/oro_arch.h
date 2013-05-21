@@ -1,11 +1,11 @@
 /***************************************************************************
-  tag: Peter Soetens  Mon Jan 10 15:59:15 CET 2005  oro_atomic.h
+ tag: Peter Soetens  Mon Jan 10 15:59:15 CET 2005  oro_atomic.h
 
-                        oro_atomic.h -  description
-                           -------------------
-    begin                : Mon January 10 2005
-    copyright            : (C) 2005 Peter Soetens
-    email                : peter.soetens@mech.kuleuven.ac.be
+ oro_atomic.h -  description
+ -------------------
+ begin                : Mon January 10 2005
+ copyright            : (C) 2005 Peter Soetens
+ email                : peter.soetens@mech.kuleuven.ac.be
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -35,8 +35,6 @@
  *                                                                         *
  ***************************************************************************/
 
-
-
 //#include "../../rtt-config.h"
 #ifndef __ORO_ARCH_I386__
 #define __ORO_ARCH_I386__
@@ -47,7 +45,10 @@
 #define ORO_LOCK ""
 #endif
 
-typedef struct { volatile int counter; } oro_atomic_t;
+typedef struct
+{
+  volatile int counter;
+} oro_atomic_t;
 
 #define ORO_ATOMIC_SETUP	oro_atomic_set
 #define ORO_ATOMIC_CLEANUP(v)
@@ -56,58 +57,58 @@ typedef struct { volatile int counter; } oro_atomic_t;
 
 #define oro_atomic_set(v,i)		(((v)->counter) = (i))
 
-static __inline__ void oro_atomic_add( oro_atomic_t *v, int i)
+static __inline__ void oro_atomic_add(oro_atomic_t *v, int i)
 {
-	__asm__ __volatile__(
-		ORO_LOCK "addl %1,%0"
-		:"=m" (v->counter)
-		:"ir" (i), "m" (v->counter));
+  __asm__ __volatile__(
+      ORO_LOCK "addl %1,%0"
+      :"=m" (v->counter)
+      :"ir" (i), "m" (v->counter));
 }
 
-static __inline__ void oro_atomic_sub( oro_atomic_t *v, int i)
+static __inline__ void oro_atomic_sub(oro_atomic_t *v, int i)
 {
-	__asm__ __volatile__(
-		ORO_LOCK "subl %1,%0"
-		:"=m" (v->counter)
-		:"ir" (i), "m" (v->counter));
+  __asm__ __volatile__(
+      ORO_LOCK "subl %1,%0"
+      :"=m" (v->counter)
+      :"ir" (i), "m" (v->counter));
 }
 
 static __inline__ void oro_atomic_inc(oro_atomic_t *v)
 {
-	__asm__ __volatile__(
-		ORO_LOCK "incl %0"
-		:"=m" (v->counter)
-		:"m" (v->counter));
+  __asm__ __volatile__(
+      ORO_LOCK "incl %0"
+      :"=m" (v->counter)
+      :"m" (v->counter));
 }
 
 static __inline__ void oro_atomic_dec(oro_atomic_t *v)
 {
-	__asm__ __volatile__(
-		ORO_LOCK "decl %0"
-		:"=m" (v->counter)
-		:"m" (v->counter));
+  __asm__ __volatile__(
+      ORO_LOCK "decl %0"
+      :"=m" (v->counter)
+      :"m" (v->counter));
 }
 
 static __inline__ int oro_atomic_dec_and_test(oro_atomic_t *v)
 {
-	unsigned char c;
+  unsigned char c;
 
-	__asm__ __volatile__(
-		ORO_LOCK "decl %0; sete %1"
-		:"=m" (v->counter), "=qm" (c)
-		:"m" (v->counter) : "memory");
-	return c != 0;
+  __asm__ __volatile__(
+      ORO_LOCK "decl %0; sete %1"
+      :"=m" (v->counter), "=qm" (c)
+      :"m" (v->counter) : "memory");
+  return c != 0;
 }
 
 static __inline__ int oro_atomic_inc_and_test(oro_atomic_t *v)
 {
-	unsigned char c;
+  unsigned char c;
 
-	__asm__ __volatile__(
-		ORO_LOCK "incl %0; sete %1"
-		:"=m" (v->counter), "=qm" (c)
-		:"m" (v->counter) : "memory");
-	return c != 0;
+  __asm__ __volatile__(
+      ORO_LOCK "incl %0; sete %1"
+      :"=m" (v->counter), "=qm" (c)
+      :"m" (v->counter) : "memory");
+  return c != 0;
 }
 
 #define smp_mb__before_oro_atomic_dec()	barrier()
@@ -121,34 +122,37 @@ static __inline__ int oro_atomic_inc_and_test(oro_atomic_t *v)
 #define ORO_LOCK_PREFIX ""
 #endif
 
-struct oro__xchg_dummy { unsigned long a[100]; };
+struct oro__xchg_dummy
+{
+  unsigned long a[100];
+};
 #define oro__xg(x) ((struct oro__xchg_dummy *)(x))
 
-static inline unsigned long __oro_cmpxchg(volatile void *ptr, unsigned long old,
-                                      unsigned long _new, int size)
+static inline unsigned long __oro_cmpxchg(volatile void *ptr, unsigned long old, unsigned long _new, int size)
 {
-    unsigned long prev;
-    switch (size) {
+  unsigned long prev;
+  switch (size)
+  {
     case 1:
-        __asm__ __volatile__(ORO_LOCK_PREFIX "cmpxchgb %b1,%2"
-                     : "=a"(prev)
-                     : "q"(_new), "m"(*oro__xg(ptr)), "0"(old)
-                     : "memory");
-        return prev;
+      __asm__ __volatile__(ORO_LOCK_PREFIX "cmpxchgb %b1,%2"
+          : "=a"(prev)
+          : "q"(_new), "m"(*oro__xg(ptr)), "0"(old)
+          : "memory");
+      return prev;
     case 2:
-        __asm__ __volatile__(ORO_LOCK_PREFIX "cmpxchgw %w1,%2"
-                     : "=a"(prev)
-                     : "q"(_new), "m"(*oro__xg(ptr)), "0"(old)
-                     : "memory");
-        return prev;
+      __asm__ __volatile__(ORO_LOCK_PREFIX "cmpxchgw %w1,%2"
+          : "=a"(prev)
+          : "q"(_new), "m"(*oro__xg(ptr)), "0"(old)
+          : "memory");
+      return prev;
     case 4:
-        __asm__ __volatile__(ORO_LOCK_PREFIX "cmpxchgl %1,%2"
-                     : "=a"(prev)
-                     : "q"(_new), "m"(*oro__xg(ptr)), "0"(old)
-                     : "memory");
-        return prev;
-    }
-    return old;
+      __asm__ __volatile__(ORO_LOCK_PREFIX "cmpxchgl %1,%2"
+          : "=a"(prev)
+          : "q"(_new), "m"(*oro__xg(ptr)), "0"(old)
+          : "memory");
+      return prev;
+  }
+  return old;
 }
 
 #define oro_cmpxchg(ptr,o,n)\
