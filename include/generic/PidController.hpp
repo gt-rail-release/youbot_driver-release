@@ -34,63 +34,62 @@
 #ifndef PIDCONTROLLER_HPP
 #define PIDCONTROLLER_HPP
 
-
 #include <string>
 #include "generic/Time.hpp"
 
-
-namespace youbot {
+namespace youbot
+{
 
 /***************************************************/
 /*! \class PidController
-    \brief A basic pid class.
+ \brief A basic pid class.
 
-    This class implements a generic structure that
-    can be used to create a wide range of pid
-    controllers. It can function independently or
-    be subclassed to provide more specific controls
-    based on a particular control loop.
+ This class implements a generic structure that
+ can be used to create a wide range of pid
+ controllers. It can function independently or
+ be subclassed to provide more specific controls
+ based on a particular control loop.
 
-    In particular, this class implements the standard
-    pid equation:
+ In particular, this class implements the standard
+ pid equation:
 
-    \f$command  = -p_{term} - i_{term} - d_{term} \f$
+ \f$command  = -p_{term} - i_{term} - d_{term} \f$
 
-    where: <br>
-    <UL TYPE="none">
-    <LI>  \f$ p_{term}  = p_{gain} * p_{error} \f$
-    <LI>  \f$ i_{term}  = i_{gain} * i_{error} \f$
-    <LI>  \f$ d_{term}  = d_{gain} * d_{error} \f$
-    <LI>  \f$ i_{error} = i_{error} + p_{error} * dt \f$
-    <LI>  \f$ d_{error} = (p_{error} - p_{error last}) / dt \f$
-    </UL>
+ where: <br>
+ <UL TYPE="none">
+ <LI>  \f$ p_{term}  = p_{gain} * p_{error} \f$
+ <LI>  \f$ i_{term}  = i_{gain} * i_{error} \f$
+ <LI>  \f$ d_{term}  = d_{gain} * d_{error} \f$
+ <LI>  \f$ i_{error} = i_{error} + p_{error} * dt \f$
+ <LI>  \f$ d_{error} = (p_{error} - p_{error last}) / dt \f$
+ </UL>
 
-    given:<br>
-    <UL TYPE="none">
-    <LI>  \f$ p_{error}  = p_{state} - p_{target} \f$.
-    </UL>
+ given:<br>
+ <UL TYPE="none">
+ <LI>  \f$ p_{error}  = p_{state} - p_{target} \f$.
+ </UL>
 
 
-    @section Usage
+ @section Usage
 
-    To use the Pid class, you should first call some version of init()
-    (in non-realtime) and then call updatePid() at every update step.
-    For example:
+ To use the Pid class, you should first call some version of init()
+ (in non-realtime) and then call updatePid() at every update step.
+ For example:
 
-\verbatim
-control_toolbox::Pid pid;
-pid.initPid(6.0, 1.0, 2.0, 0.3, -0.3);
-double position_desi_ = 0.5;
-...
-ros::Time last_time = ros::Time::now();
-while (true) {
-  ros::Time time = ros::Time::now();
-  double effort = pid.updatePid(currentPosition() - position_desi_, time - last_time);
-  last_time = time;
-}
-\endverbatim
+ \verbatim
+ control_toolbox::Pid pid;
+ pid.initPid(6.0, 1.0, 2.0, 0.3, -0.3);
+ double position_desi_ = 0.5;
+ ...
+ ros::Time last_time = ros::Time::now();
+ while (true) {
+ ros::Time time = ros::Time::now();
+ double effort = pid.updatePid(currentPosition() - position_desi_, time - last_time);
+ last_time = time;
+ }
+ \endverbatim
 
-*/
+ */
 /***************************************************/
 
 class PidController
@@ -132,7 +131,7 @@ public:
    * \param I2 The integral lower limit.
    */
   void initPid(double P, double I, double D, double I1, double I2);
-  
+
   /*!
    * \brief Reset the state of this PID controller
    */
@@ -206,12 +205,12 @@ private:
   double p_error_; /**< Position error. */
   double d_error_; /**< Derivative error. */
   double i_error_; /**< Integator error. */
-  double p_gain_;  /**< Proportional gain. */
-  double i_gain_;  /**< Integral gain. */
-  double d_gain_;  /**< Derivative gain. */
-  double i_max_;   /**< Maximum allowable integral term. */
-  double i_min_;   /**< Minimum allowable integral term. */
-  double cmd_;     /**< Command to send. */
+  double p_gain_; /**< Proportional gain. */
+  double i_gain_; /**< Integral gain. */
+  double d_gain_; /**< Derivative gain. */
+  double i_max_; /**< Maximum allowable integral term. */
+  double i_min_; /**< Minimum allowable integral term. */
+  double cmd_; /**< Command to send. */
   double last_i_error;
 };
 

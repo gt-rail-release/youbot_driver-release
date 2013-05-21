@@ -1,5 +1,4 @@
 /*!
-
 @page troubleshooting Troubleshooting
 
 \section trouble1 If you can not connect to the EtherCAT slave or you see a message like "No slaves found!". Try the following:
@@ -10,5 +9,4 @@
 	@endcode
 
 - Set manually a IP address to your ethernet adapter (eg. eth0). Sometimes Ubuntu disables the ethernet adapter if no IP address is set.
-
 */

@@ -52,12 +52,14 @@
  *
  ****************************************************************/
 #include "generic-joint/JointParameter.hpp"
-namespace youbot {
+namespace youbot
+{
 
 ///////////////////////////////////////////////////////////////////////////////
 /// abstract gripper parameter
 ///////////////////////////////////////////////////////////////////////////////
-class GripperParameter : public Parameter {
+class GripperParameter : public Parameter
+{
 };
 
 } // namespace youbot

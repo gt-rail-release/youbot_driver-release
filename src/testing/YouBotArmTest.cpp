@@ -4,32 +4,40 @@
 
 using namespace youbot;
 
-YouBotArmTest::YouBotArmTest():dof(5) {
+YouBotArmTest::YouBotArmTest() :
+    dof(5)
+{
   char* location = getenv("YOUBOT_CONFIG_FOLDER_LOCATION");
-  if(location == NULL) throw std::runtime_error("YouBotArmTest.cpp: Could not find environment variable YOUBOT_CONFIG_FOLDER_LOCATION");
+  if (location == NULL)
+    throw std::runtime_error("YouBotArmTest.cpp: Could not find environment variable YOUBOT_CONFIG_FOLDER_LOCATION");
 
   EthercatMaster::getInstance("youbot-ethercat.cfg", location, true);
 }
 
-YouBotArmTest::~YouBotArmTest() {
+YouBotArmTest::~YouBotArmTest()
+{
 }
 
-void YouBotArmTest::setUp() {
+void YouBotArmTest::setUp()
+{
   Logger::logginLevel = trace;
   updateCycle = 2000;
 
 }
 
-void YouBotArmTest::tearDown() {
+void YouBotArmTest::tearDown()
+{
   //	EthercatMaster::destroy();
 }
 
-void YouBotArmTest::youBotArmTest() {
+void YouBotArmTest::youBotArmTest()
+{
   char* configLocation = getenv("YOUBOT_CONFIG_FOLDER_LOCATION");
-  if(configLocation == NULL) throw std::runtime_error("YouBotArmTest.cpp: Could not find environment variable YOUBOT_CONFIG_FOLDER_LOCATION");
+  if (configLocation == NULL)
+    throw std::runtime_error("YouBotArmTest.cpp: Could not find environment variable YOUBOT_CONFIG_FOLDER_LOCATION");
 
   LOG(info) << __func__ << "\n";
-  YouBotManipulator myArm("youbot-manipulator",configLocation);
+  YouBotManipulator myArm("youbot-manipulator", configLocation);
   myArm.doJointCommutation();
   myArm.calibrateManipulator();
 
@@ -61,23 +69,25 @@ void YouBotArmTest::youBotArmTest() {
   desiredJointAngle.angle = 0.2 * radian;
   foldedpose.push_back(desiredJointAngle);
 
-
-  for (int i = 1; i <= dof; i++) {
+  for (int i = 1; i <= dof; i++)
+  {
     jointNameStream << "Joint_" << i << "_" << __func__;
     myTrace.push_back(new DataTrace(myArm.getArmJoint(i), jointNameStream.str(), true));
     jointNameStream.str("");
   }
 
-
-  for (int i = 0; i < dof; i++) {
+  for (int i = 0; i < dof; i++)
+  {
     myTrace[i].startTrace();
   }
 
   // 1 sec no movement
   startTime = myTrace[0].getTimeDurationMilliSec();
-  overallTime = startTime + 1000;  
-  while (myTrace[0].getTimeDurationMilliSec() < overallTime) {
-    for (int i = 0; i < dof; i++) {
+  overallTime = startTime + 1000;
+  while (myTrace[0].getTimeDurationMilliSec() < overallTime)
+  {
+    for (int i = 0; i < dof; i++)
+    {
       myTrace[i].updateTrace();
     }
     SLEEP_MICROSEC(updateCycle);
@@ -87,35 +97,42 @@ void YouBotArmTest::youBotArmTest() {
   startTime = myTrace[0].getTimeDurationMilliSec();
   overallTime = startTime + 5000;
   myArm.setJointData(upstretchedpose);
-  while (myTrace[0].getTimeDurationMilliSec() < overallTime) {
-    for (int i = 0; i < dof; i++) {
+  while (myTrace[0].getTimeDurationMilliSec() < overallTime)
+  {
+    for (int i = 0; i < dof; i++)
+    {
       myTrace[i].updateTrace();
     }
     SLEEP_MICROSEC(updateCycle);
   }
-  
+
   // move to folded position
   startTime = myTrace[0].getTimeDurationMilliSec();
   overallTime = startTime + 5000;
   myArm.setJointData(foldedpose);
-  while (myTrace[0].getTimeDurationMilliSec() < overallTime) {
-    for (int i = 0; i < dof; i++) {
+  while (myTrace[0].getTimeDurationMilliSec() < overallTime)
+  {
+    for (int i = 0; i < dof; i++)
+    {
       myTrace[i].updateTrace();
     }
     SLEEP_MICROSEC(updateCycle);
   }
-  
+
   // 1 sec no movement
   startTime = myTrace[0].getTimeDurationMilliSec();
-  overallTime = startTime + 1000;  
-  while (myTrace[0].getTimeDurationMilliSec() < overallTime) {
-    for (int i = 0; i < dof; i++) {
+  overallTime = startTime + 1000;
+  while (myTrace[0].getTimeDurationMilliSec() < overallTime)
+  {
+    for (int i = 0; i < dof; i++)
+    {
       myTrace[i].updateTrace();
     }
     SLEEP_MICROSEC(updateCycle);
   }
-  
-  for (int i = 0; i < dof; i++) {
+
+  for (int i = 0; i < dof; i++)
+  {
     myTrace[i].stopTrace();
     myTrace[i].plotTrace();
   }
