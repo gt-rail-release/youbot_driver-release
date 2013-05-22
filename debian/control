@@ -1,0 +1,12 @@
+Source: ros-groovy-youbot-driver
+Section: misc
+Priority: extra
+Maintainer: Russell Toris <rctoris@wpi.edu>
+Build-Depends: debhelper (>= 7.0.50~), libcppunit-dev, ros-groovy-catkin, ros-groovy-rosconsole, ros-groovy-roscpp
+Homepage: http://ros.org/wiki/youbot_driver
+Standards-Version: 3.9.2
+
+Package: ros-groovy-youbot-driver
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libcap2-bin, libcppunit-dev, ros-groovy-rosconsole, ros-groovy-roscpp
+Description: Drivers for the KUKA youBot Robot
