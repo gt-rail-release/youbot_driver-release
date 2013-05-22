@@ -1,5 +1,8 @@
 DEVEL - **0.1.x**
 
+2013-05-22 - **0.1.6**
+ * postint and postrm scripts now do not use sudo [(rctoris)](https://github.com/rctoris/)
+
 2013-05-21 - **0.1.5**
  * Patch in postint script [(rctoris)](https://github.com/rctoris/)
 
