@@ -1,8 +1,0 @@
-#!/bin/sh
-
-echo "Running setcap for youbot_driver..."
-setcap cap_net_raw+ep /opt/ros/groovy/lib/youbot_driver/base_arm_gripper_test
-setcap cap_net_raw+ep /opt/ros/groovy/lib/youbot_driver/displayIpAddress
-echo "Linking libraries for youbot_driver..."
-ln -s /opt/ros/groovy/share/youbot_driver/ld/groovy.conf /etc/ld.so.conf.d/groovy.conf 
-ldconfig
