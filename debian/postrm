@@ -1,4 +1,5 @@
 #!/bin/sh
 
-sudo rm /etc/ld.so.conf.d/groovy.conf
-sudo ldconfig
+echo "Removing library link for youbot_driver..."
+rm /etc/ld.so.conf.d/groovy.conf
+ldconfig
