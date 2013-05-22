@@ -1,0 +1,44 @@
+From a1dd75a7dc9cfc1714332ecaf5c9c03ac544c7ee Mon Sep 17 00:00:00 2001
+From: Russell Toris <rctoris@wpi.edu>
+Date: Wed, 22 May 2013 14:04:24 -0400
+Subject: [PATCH 4/4] postinst and postrm scripts added
+
+---
+ debian/postinst |   10 ++++++----
+ debian/postrm   |    5 +++--
+ 2 files changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/debian/postinst b/debian/postinst
+index 71e56ff..5635a95 100755
+--- a/debian/postinst
++++ b/debian/postinst
+@@ -1,6 +1,8 @@
+ #!/bin/sh
+ 
+-sudo setcap cap_net_raw+ep /opt/ros/groovy/lib/youbot_driver/base_arm_gripper_test
+-sudo setcap cap_net_raw+ep /opt/ros/groovy/lib/youbot_driver/displayIpAddress
+-sudo cp /opt/ros/groovy/share/youbot_driver/ld/*.conf /etc/ld.so.conf.d
+-sudo ldconfig
+\ No newline at end of file
++echo "Running setcap for youbot_driver..."
++setcap cap_net_raw+ep /opt/ros/groovy/lib/youbot_driver/base_arm_gripper_test
++setcap cap_net_raw+ep /opt/ros/groovy/lib/youbot_driver/displayIpAddress
++echo "Linking libraries for youbot_driver..."
++ln -s /opt/ros/groovy/share/youbot_driver/ld/groovy.conf /etc/ld.so.conf.d/groovy.conf 
++ldconfig
+diff --git a/debian/postrm b/debian/postrm
+index 8c738dd..09c4f00 100755
+--- a/debian/postrm
++++ b/debian/postrm
+@@ -1,4 +1,5 @@
+ #!/bin/sh
+ 
+-sudo rm /etc/ld.so.conf.d/groovy.conf
+-sudo ldconfig
+\ No newline at end of file
++echo "Removing library link for youbot_driver..."
++rm /etc/ld.so.conf.d/groovy.conf
++ldconfig
+-- 
+1.7.9.5
+
