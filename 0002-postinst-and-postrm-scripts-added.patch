@@ -1,4 +1,4 @@
-From 3e83bc1d8b8b8974ebfa996c4eaaf45fe6a54bd0 Mon Sep 17 00:00:00 2001
+From c6432f9269d324e68a2b6f02e789e9cb49c52846 Mon Sep 17 00:00:00 2001
 From: Russell Toris <rctoris@wpi.edu>
 Date: Tue, 21 May 2013 11:46:48 -0400
 Subject: [PATCH 2/3] postinst and postrm scripts added
