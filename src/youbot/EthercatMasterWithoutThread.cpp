@@ -50,16 +50,16 @@
  ****************************************************************/
 extern "C"
 {
-#include "soem/ethercattype.h"
-#include "soem/nicdrv.h"
-#include "soem/ethercatbase.h"
-#include "soem/ethercatmain.h"
-#include "soem/ethercatconfig.h"
-#include "soem/ethercatcoe.h"
-#include "soem/ethercatdc.h"
-#include "soem/ethercatprint.h"
+#include <youbot_driver/soem/ethercattype.h>
+#include <youbot_driver/soem/nicdrv.h>
+#include <youbot_driver/soem/ethercatbase.h>
+#include <youbot_driver/soem/ethercatmain.h>
+#include <youbot_driver/soem/ethercatconfig.h>
+#include <youbot_driver/soem/ethercatcoe.h>
+#include <youbot_driver/soem/ethercatdc.h>
+#include <youbot_driver/soem/ethercatprint.h>
 }
-#include "youbot/EthercatMasterWithoutThread.hpp"
+#include <youbot_driver/youbot/EthercatMasterWithoutThread.hpp>
 
 namespace youbot
 {

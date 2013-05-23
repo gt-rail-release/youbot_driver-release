@@ -48,11 +48,11 @@
 #include <string.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include "soem/ethercattype.h"
-#include "soem/nicdrv.h"
-#include "soem/ethercatbase.h"
-#include "soem/ethercatmain.h"
-#include "soem/ethercatsoe.h"
+#include <youbot_driver/soem/ethercattype.h>
+#include <youbot_driver/soem/nicdrv.h>
+#include <youbot_driver/soem/ethercatbase.h>
+#include <youbot_driver/soem/ethercatmain.h>
+#include <youbot_driver/soem/ethercatsoe.h>
 
 /** SoE (Servo over EtherCAT) mailbox structure */
 typedef struct
