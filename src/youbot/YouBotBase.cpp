@@ -48,7 +48,7 @@
  * License LGPL and BSD license along with this program.
  *
  ****************************************************************/
-#include "youbot/YouBotBase.hpp"
+#include <youbot_driver/youbot/YouBotBase.hpp>
 namespace youbot
 {
 

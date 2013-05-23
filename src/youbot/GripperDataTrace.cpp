@@ -48,7 +48,7 @@
  * License LGPL and BSD license along with this program.
  *
  ****************************************************************/
-#include "youbot/GripperDataTrace.hpp"
+#include <youbot_driver/youbot/GripperDataTrace.hpp>
 namespace youbot
 {
 
