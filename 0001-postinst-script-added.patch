@@ -1,4 +1,4 @@
-From 1c9ada3b6eef1f5eb30d745c1db342e33224641a Mon Sep 17 00:00:00 2001
+From 06db174f2503e0501a5f42231d834d3fc8e74302 Mon Sep 17 00:00:00 2001
 From: Russell Toris <rctoris@wpi.edu>
 Date: Mon, 20 May 2013 14:32:58 -0400
 Subject: [PATCH 1/4] postinst script added
