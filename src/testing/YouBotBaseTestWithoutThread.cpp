@@ -1,4 +1,4 @@
-#include "testing/YouBotBaseTestWithoutThread.hpp"
+#include <youbot_driver/testing/YouBotBaseTestWithoutThread.hpp>
 #include <stdlib.h>
 #include <stdexcept>
 

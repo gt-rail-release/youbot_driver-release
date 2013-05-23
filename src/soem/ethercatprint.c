@@ -48,8 +48,8 @@
  */
 
 #include <stdio.h>
-#include "soem/ethercattype.h"
-#include "soem/ethercatmain.h"
+#include <youbot_driver/soem/ethercattype.h>
+#include <youbot_driver/soem/ethercatmain.h>
 
 #define EC_MAXERRORNAME 127
 
