@@ -89,7 +89,7 @@ install(TARGETS YouBotDriver
 )
 
 ## Copy header files
-install(DIRECTORY include/
+install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
   FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h"
 )
