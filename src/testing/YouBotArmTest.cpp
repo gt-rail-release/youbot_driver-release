@@ -1,4 +1,4 @@
-#include "testing/YouBotArmTest.hpp"
+#include <youbot_driver/testing/YouBotArmTest.hpp>
 #include <stdlib.h>
 #include <stdexcept>
 
