@@ -55,10 +55,10 @@
 #include <sys/time.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-#include "soem/ethercattype.h"
-#include "soem/nicdrv.h"
-#include "soem/ethercatbase.h"
-#include "soem/ethercatmain.h"
+#include <youbot_driver/soem/ethercattype.h>
+#include <youbot_driver/soem/nicdrv.h>
+#include <youbot_driver/soem/ethercatbase.h>
+#include <youbot_driver/soem/ethercatmain.h>
 
 /** delay in us for eeprom ready loop */
 #define EC_LOCALDELAY   200

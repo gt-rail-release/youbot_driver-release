@@ -51,9 +51,9 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "soem/ethercattype.h"
-#include "soem/nicdrv.h"
-#include "soem/ethercatbase.h"
+#include <youbot_driver/soem/ethercattype.h>
+#include <youbot_driver/soem/nicdrv.h>
+#include <youbot_driver/soem/ethercatbase.h>
 
 /** Generate and set EtherCAT datagram in a standard ethernet frame.
  *

@@ -1,4 +1,4 @@
-#include "testing/YouBotBaseKinematicsTest.hpp"
+#include <youbot_driver/testing/YouBotBaseKinematicsTest.hpp>
 #include <stdlib.h>
 #include <stdexcept>
 
